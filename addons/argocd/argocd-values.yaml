@@ -1,0 +1,55 @@
+global:
+  networkPolicy:
+    create: true
+
+controller:
+  args:
+    # -- define the application controller `--status-processors`
+    statusProcessors: "20"
+    # -- define the application controller `--operation-processors`
+    operationProcessors: "10"
+    # -- define the application controller `--app-hard-resync`
+    appHardResyncPeriod: "0"
+    # -- define the application controller `--app-resync`
+    appResyncPeriod: "20"
+    # -- define the application controller `--self-heal-timeout-seconds`
+    selfHealTimeout: "5"
+    # -- define the application controller `--repo-server-timeout-seconds`
+    repoServerTimeoutSeconds: "60"
+
+server:
+  ingress:
+    enabled: true
+    annotations: {}
+    # add nginx annotatio for backend protocol https
+    # don't redirect to https, argocd-server is doing that already
+    ingressClassName: "nginx"
+    hosts:
+    - banana.alleaffengaffen.ch
+    tls:
+    - secretName: argocd-tls-certificate
+      hosts:
+      - banana.alleaffengaffen.ch
+    https: true # TLS termination should happen on argocd-server (grpc)
+
+  config:
+    url: "https://banana.alleaffengaffen.ch"
+    server.rbac.log.enforce.enable: "true"
+    exec.enabled: "true"
+    admin.enabled: "true"
+
+  dex.config: |
+    connectors:
+      - type: github
+        id: github
+        name: GitHub
+        config:
+          clientID: 26be52c1bdb04a4d6e1f
+          clientSecret: $github:clientSecret
+          orgs:
+          - name: alleaffengaffen
+  rbacConfig:
+    policy.csv: |
+      # Grant all members of 'alleaffengaffen:orangutans' admins
+      g, alleaffengaffen:orangutans, role:admin
+    policy.default: role:readonly
