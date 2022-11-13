@@ -1,0 +1,4 @@
+---
+resources:
+- cluster-wide.yaml
+- kube-system.yaml

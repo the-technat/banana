@@ -39,7 +39,7 @@ Just join with the command the init prints to stdout, no special config required
 For now, just install cilium with default values. We're configuring the features we want to have later on:
 
 ```bash
-helm upgrade -i cilium cilium/cilium -n kube-system --set policyEnforcemenetMode=always
+helm upgrade -i cilium cilium/cilium -n kube-system
 ```
 
 ## Argo CD
@@ -47,7 +47,7 @@ helm upgrade -i cilium cilium/cilium -n kube-system --set policyEnforcemenetMode
 Now that we have a CNI, install Argo CD with default values:
 
 ```bash
-helm upgrade -i argocd argo/argo-cd -n argocd --create-namespace --set global.networkPolicy.create=true
+helm upgrade -i argocd argo/argo-cd -n argocd --create-namespace
 ```
 
 We will see that argo cd get's the right values later on...

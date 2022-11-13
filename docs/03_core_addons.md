@@ -1,33 +1,60 @@
 # Core Addons
 
-Cilium is installed, some pods are coming up, others won't because of missing NPs and more.
-The next thing we are going to do is installing some core addons.
+Cilium is installed, Argo CD is installed but both with the default config.
+
+The next thing we are going to do is installing some core addons, but in a very special way.
+
+## App of Apps
+
+The first thing to do is creating an Argo CD app that watches our repository for app definitions, so that we they are automatically deployed.
+
+Here's our app of apps:
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: addons
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  description: Cluster infrastructure addons
+  destinations:
+  - name: in-cluster
+    namespace: '*'
+    server: https://kubernetes.default.svc
+  namespaceResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  sourceRepos:
+  - https://github.com/alleaffengaffen/banana.git
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: app-of-apps
+spec:
+  destination:
+    name: ''
+    namespace: argocd
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: definitions
+    repoURL: 'https://github.com/alleaffengaffen/banana.git'
+    targetRevision: HEAD
+  project: addons
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+```
+
+Apply this to the cluster into the argocd namespace and you're almost done, as Argo CD now starts onboarding your apps.
 
 ## Argo CD
 
-We need argo-cd for everthing. So make sure our already installed Argo CD can manage itself.
+## Cilium
 
-[Guide](https://github.com/the-technat/the-technat/blob/main/content/Kubernetes/argocd.md)
-
-My values file can be found within this folder.
-
-For the "Login with Github" I created a secret first:
-
-```bash
-kubectl create namespace argocd
-kubectl create secret generic github --from-literal clientSecret=<pasteSecretHere>
-```
-
-Then Argo CD can be installed. Some components won't be healthy at start, but that's normal because some controllers are missing.
-
-## Manage Argo CD with Argo CD
-
-Now that Argo CD is installed, make sure it managed itself using the GH repo.
-
-## Argo CD configures cilium
-
-Now that Argo CD is in place, make sure it replaces the original default values of cilium with our desired ones.
-
-## Onboard addons
-
-Now make sure Argo CD can read the git repo and onboards all the other apps we need + their secrets (we wont create any secret manualy other than the github clientSecret).
+# Sealed Secrets Controller
