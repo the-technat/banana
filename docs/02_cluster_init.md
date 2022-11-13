@@ -47,7 +47,7 @@ helm upgrade -i cilium cilium/cilium -n kube-system --set policyEnforcemenetMode
 Now that we have a CNI, install Argo CD with default values:
 
 ```bash
-helm upgrade -i argocd argo/argo-cd -n argocd --create-namespace
+helm upgrade -i argocd argo/argo-cd -n argocd --create-namespace --set global.networkPolicy.create=true
 ```
 
 We will see that argo cd get's the right values later on...
