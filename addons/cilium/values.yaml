@@ -12,9 +12,6 @@ encryption:
   enabled: true
   type: wireguard
 
-operator:
-  replicas: 1
-
 l7Proxy: false
 
 hubble:

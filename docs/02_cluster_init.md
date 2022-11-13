@@ -40,10 +40,10 @@ See this [guide](https://kubernetes.io/docs/concepts/architecture/nodes/#gracefu
 
 ## CNI Installation
 
-For now, just install cilium with default values. We're configuring the features we want to have later on:
+For now, just install cilium with default values (except for kube-proxy). We're configuring the features we want to have later on:
 
 ```bash
-helm upgrade -i cilium cilium/cilium -n kube-system
+helm upgrade -i cilium cilium/cilium -n kube-system --set kubeProxyReplacement=strict --set k8sServiceHost=banana.alleaffengaffen.ch --set k8sServicePort=6443
 ```
 
 ## Argo CD
