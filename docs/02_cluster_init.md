@@ -34,6 +34,10 @@ cgroupDriver: systemd # must match the value you set for containerd
 
 Just join with the command the init prints to stdout, no special config required
 
+## Graceful node shutdown
+
+See this [guide](https://kubernetes.io/docs/concepts/architecture/nodes/#graceful-node-shutdown) for more details, the fields are already present in `/var/lib/kubelet/config.yaml` so just change this.
+
 ## CNI Installation
 
 For now, just install cilium with default values. We're configuring the features we want to have later on:

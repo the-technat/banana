@@ -32,7 +32,7 @@ ingressController:
 hostFirewall:
   enabled: false
 
-policyEnforcementMode: "always"
+policyEnforcementMode: "default"
 
 kubeProxyReplacement: "strict"
 k8sServiceHost: "banana.alleaffengaffen.ch"
