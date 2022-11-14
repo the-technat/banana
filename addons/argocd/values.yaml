@@ -18,41 +18,43 @@ argo-cd:
       # -- define the application controller `--repo-server-timeout-seconds`
       repoServerTimeoutSeconds: "60"
 
+  configs:
+    cm:
+      url: "https://argo.alleaffengaffen.ch"
+      server.rbac.log.enforce.enable: "true"
+      exec.enabled: "true"
+      admin.enabled: "true"
+      dex.config: |
+        connectors:
+          - type: github
+            id: github
+            name: GitHub
+            config:
+              clientID: 26be52c1bdb04a4d6e1f
+              clientSecret: $github:clientSecret # references the sealed secret in the templates folder
+              orgs:
+              - name: alleaffengaffen
+    rbac:
+      policy.csv: |
+        # Grant all members of 'alleaffengaffen:orangutans' admins
+        g, alleaffengaffen:orangutans, role:admin
+      policy.default: role:readonly
+
   server:
     ingress:
       enabled: true
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-staging
         nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-        nginx.ingress.kubernetes.io/ssl-redirect: "true"
       ingressClassName: "nginx"
       hosts:
       - argo.alleaffengaffen.ch
       tls:
-      - secretName: argocd-tls-certificate
+      - secretName: argocd-secret
         hosts:
         - argo.alleaffengaffen.ch
       https: true # TLS termination should happen on argocd-server (grpc)
 
-    config:
-      url: "https://argo.alleaffengaffen.ch"
-      server.rbac.log.enforce.enable: "true"
-      exec.enabled: "true"
-      admin.enabled: "true"
 
-    dex.config: |
-      connectors:
-        - type: github
-          id: github
-          name: GitHub
-          config:
-            clientID: 26be52c1bdb04a4d6e1f
-            clientSecret: $github:clientSecret # references the sealed secret in the templates folder
-            orgs:
-            - name: alleaffengaffen
-    rbacConfig:
-      policy.csv: |
-        # Grant all members of 'alleaffengaffen:orangutans' admins
-        g, alleaffengaffen:orangutans, role:admin
-      policy.default: role:readonly

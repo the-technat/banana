@@ -2,7 +2,7 @@
 
 ## Hetnzer Resources
 
-- Load Balancer: one that points to all the master nodes using port 6443
+- DNS record pointing to all master nodes (used for kubeapi)
 - Placement Groups: one for workers, one for masters
 - SSH-Key which is the default key
 - Firewall Rules: one for masters, one for workers using the following rules:
