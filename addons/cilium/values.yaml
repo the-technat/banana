@@ -1,36 +1,37 @@
-rollOutCiliumPods: true
+cilium:
+  rollOutCiliumPods: true
 
-priorityClassName: "system-node-critical"
+  priorityClassName: "system-node-critical"
 
-annotateK8sNode: true
+  annotateK8sNode: true
 
-containerRuntime:
-  integration: containerd
-  socketPath: /var/run/containerd/containerd.sock
+  containerRuntime:
+    integration: containerd
+    socketPath: /var/run/containerd/containerd.sock
 
-encryption:
-  enabled: true
-  type: wireguard
-
-l7Proxy: false
-
-hubble:
-  enabled: true
-  relay:
+  encryption:
     enabled: true
-  ui:
+    type: wireguard
+
+  l7Proxy: false
+
+  hubble:
     enabled: true
-    rollOutPods: true
+    relay:
+      enabled: true
+    ui:
+      enabled: true
+      rollOutPods: true
 
-ingressController:
-  enabled: true
-  enforceHttps: true
+  ingressController:
+    enabled: true
+    enforceHttps: true
 
-hostFirewall:
-  enabled: false
+  hostFirewall:
+    enabled: false
 
-policyEnforcementMode: "default"
+  policyEnforcementMode: "default"
 
-kubeProxyReplacement: "strict"
-k8sServiceHost: "banana.alleaffengaffen.ch"
-k8sServicePort: "6443"
+  kubeProxyReplacement: "strict"
+  k8sServiceHost: "banana.alleaffengaffen.ch"
+  k8sServicePort: "6443"
