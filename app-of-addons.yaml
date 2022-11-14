@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: apps
+  name: addons
   namespace: argocd
   annotations:
     argocd.argoproj.io/hook: PreSync
@@ -10,7 +10,7 @@ spec:
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
-  description: Applications
+  description: Cluster infrastructure addons
   destinations:
   - name: in-cluster
     namespace: '*'
@@ -24,7 +24,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: app-of-apps
+  name: app-of-addons
   namespace: argocd
   annotations:
     argocd.argoproj.io/hook: PreSync
@@ -34,10 +34,10 @@ spec:
     namespace: argocd
     server: 'https://kubernetes.default.svc'
   source:
-    path: apps
+    path: definitions
     repoURL: 'https://github.com/alleaffengaffen/banana.git'
     targetRevision: HEAD
-  project: apps
+  project: addons
   syncPolicy:
     automated:
       prune: true
