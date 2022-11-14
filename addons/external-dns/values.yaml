@@ -1,0 +1,19 @@
+external-dns:
+  sources:
+    - service
+    - ingress
+
+  policy: sync
+  triggerLoopOnEvent: true
+  registry: txt
+  txtOwnerId: "banana"
+#txtPrefix: ""
+#txtSuffix: ""
+
+  env:
+  - name: HETZNER_TOKEN
+    value: "token_here"
+
+  domainFilters: []
+  provider: infomaniak
+  resources: {}
