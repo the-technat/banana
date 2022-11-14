@@ -24,7 +24,7 @@ cilium:
       rollOutPods: true
 
   ingressController:
-    enabled: true
+    enabled: false
     enforceHttps: true
 
   hostFirewall:
