@@ -26,15 +26,15 @@ argo-cd:
       # don't redirect to https, argocd-server is doing that already
       ingressClassName: "nginx"
       hosts:
-      - banana.alleaffengaffen.ch
+      - argo.alleaffengaffen.ch
       tls:
       - secretName: argocd-tls-certificate
         hosts:
-        - banana.alleaffengaffen.ch
+        - argo.alleaffengaffen.ch
       https: true # TLS termination should happen on argocd-server (grpc)
 
     config:
-      url: "https://banana.alleaffengaffen.ch"
+      url: "https://argo.alleaffengaffen.ch"
       server.rbac.log.enforce.enable: "true"
       exec.enabled: "true"
       admin.enabled: "true"
