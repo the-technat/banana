@@ -30,7 +30,7 @@ cilium:
   hostFirewall:
     enabled: false
 
-  policyEnforcementMode: "default"
+  policyEnforcementMode: "never"
 
   kubeProxyReplacement: "strict"
   k8sServiceHost: "banana.alleaffengaffen.ch"
