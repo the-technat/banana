@@ -5,6 +5,11 @@ ingress-nginx:
 ##
 
   controller:
+    admissionWebhooks:
+      networkPolicyEnabled: true
+    extraArgs:
+      enable-ssl-passthrough: ""
+
     # Will add custom configuration options to Nginx https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
     config: {}
 
@@ -23,29 +28,23 @@ ingress-nginx:
       controllerValue: "k8s.io/ingress-nginx"
 
     ## DaemonSet or Deployment
-    ##
     kind: DaemonSet
 
     # The update strategy to apply to the Deployment or DaemonSet
-    ##
     rollingUpdate:
       maxUnavailable: 1
     type: RollingUpdate
 
     # minReadySeconds to avoid killing pods before we are ready
-    ##
     minReadySeconds: 5
 
     service:
       annotations:
         load-balancer.hetzner.cloud/location: hel1
 
-## Default 404 backend
-##
   defaultBackend:
-    ##
     enabled: true
-    replicaCount: 2
+    replicaCount: 1
 
     resources:
       limits:

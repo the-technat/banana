@@ -21,9 +21,11 @@ argo-cd:
   server:
     ingress:
       enabled: true
-      annotations: {}
-      # add nginx annotatio for backend protocol https
-      # don't redirect to https, argocd-server is doing that already
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-staging
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
       ingressClassName: "nginx"
       hosts:
       - argo.alleaffengaffen.ch
