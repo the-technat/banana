@@ -1,0 +1,14 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  name: hcloud
+  namespace: kube-system
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+spec:
+  encryptedData:
+    token: AgBF6ofI/cvRZNWXx1AUStbGlGCQeY8HVI7aKzozqOdsf/I3pAMDahIxV86LPvKrsESP65OJ6xzrEmQfxqxt4gLy3csph/JTYygEd7ENcfWxJeYg7VSZifYWp7sDQZNUdkfqoHO/F3QAX32CtFQCsUZEVGlctDX9hB7paZkpUUHGICk2nwtiUpO/cGhSPCCmFEuvr0C8N5N+Kxaw3fZ6gdGRfyI1ywrwC8LsKB9WqduX+vr0W7p7GpQ3A5nWR74sVcbAjxS0N1hT8aJyHwIMvrvWWN7bQi0x7m638f6A/Um59eM6mZMI03SSupx2IEgXZA7cWj8Slb3Krk3PVy4f+y7U4NNSpktgsvD5vKq2OMQYq5Dxoi2BJNfZ63qJKWsU1ifI4DkePcfH4DNNK34OvoDHzzTCCs3bgvVXLw6tL+VcMybeO1kqcyCLFpyvYPj7ZsmRNzU5ylW/OXyV5chYC1dqndCjY0AFNlUnpBb4tyEyMALk88Sqsonsy6M59gUfTeEi8UFARonzjBoUgelnFHN0gsElkz6XeiH3EERNNcB9Fi14KwGI/QfSfesjFQmHlfsjXOmDOzN5MgMkCQHblG7G0VFtYgv2CFlKgIgAMUOBrrR/bR09In3IpizoMAS6TvuhP9jNnA7ljMZ+B0w9oiH3jH+zNnZEMFgeKK013gC+ZxHVoK2j27NAts6DMXNbrJ0x7ovapkOPM1OVXAl3nEUCPUZblIFoOJ559t2puCM/qIGLa9CxUqe9OVjXT0eUZzASsFL3VZfsbC52etXi6oSR
+  template:
+    metadata:
+      name: hcloud
+      namespace: kube-system
