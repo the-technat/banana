@@ -41,6 +41,12 @@ ingress-nginx:
     service:
       annotations:
         load-balancer.hetzner.cloud/location: hel1
+        load-balancer.hetzner.cloud/ipv4-rdns: banana.alleaffengaffen.ch
+        load-balancer.hetzner.cloud/ipv6-disabled: true
+        load-balancer.hetzner.cloud/name: ingress-nginx
+        load-balancer.hetzner.cloud/health-check-interval: 5s
+        load-balancer.hetzner.cloud/health-check-timeout: 2s
+        load-balancer.hetzner.cloud/health-check-retries: 5
 
   defaultBackend:
     enabled: true
