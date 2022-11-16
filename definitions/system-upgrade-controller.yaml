@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kured
+  name: system-upgrade-controller
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/alleaffengaffen/banana.git
     targetRevision: HEAD
-    path: addons/kured
+    path: addons/system-upgrade-controller
   destination:
     server: https://kubernetes.default.svc
     namespace: system-upgrade
