@@ -1,46 +1,26 @@
 # Infrastructure
 
-## Hetnzer Resources
+## Hetzner Resources
+
+Note: we only have master nodes
 
 - DNS record pointing to all master nodes (used for kubeapi)
-- Placement Groups: one for workers, one for masters
+- Placement Groups: for workers, one for masters
 - SSH-Key which is the default key
-- Firewall Rules: one for masters, one for workers using the following rules:
-  - Note: this list is not final by any way, kubeadm requires more ports to be open
-  - masters:
-
+- Firewall Rules: one for masters using the following rules:
+  - note: masters means a list of IP addresses with all masters:
   | Type     | Source          | Protocol  | Port    |
   | -------- | --------------- | --------- | --------|
-  | Incoming | 0.0.0.0/0, ::/0 | TCP       | 59245   |
-  | Incoming | 0.0.0.0/0, ::/0 | ICMP      | -       |
-  | Incoming | 0.0.0.0/0, ::/0 | TCP       | 6443    |
-  | Incoming | masters         | TCP      | 2379-2380 |
-  | Incoming | masters         | TCP       | 10250 |
-  | Incoming | masters         | TCP       | 10259 |
-  | Incoming | masters         | TCP       | 10257 |
-  | Incoming | masters         | TCP       | 4240 |
-  | Incoming | masters         | UDP       | 51871 |
-  | Incoming | masters         | UDP       | 8472 |
-  | Incoming | workers         | TCP      | 2379-2380 |
-  | Incoming | workers         | UDP       | 51871 |
-  | Incoming | workers         | TCP       | 4240 |
-  | Incoming | workers         | UDP       | 8472 |
-
-  - workers:
-
-  | Type     | Source          | Protocol  | Port    |
-  | -------- | --------------- | --------- | --------|
-  | Incoming | 0.0.0.0/0, ::/0 | TCP       | 59245   |
-  | Incoming | 0.0.0.0/0, ::/0 | ICMP      | -       |
-  | Incoming | 0.0.0.0/0, ::/0 | TCP       | 30000 - 32768 |
-  | Incoming | 0.0.0.0/0, ::/0 | UDP       | 30000 - 32768 |
-  | Incoming | masters         | TCP       | 10250 |
-  | Incoming | workers         | TCP       | 4240 |
-  | Incoming | masters         | TCP       | 4240 |
-  | Incoming | masters         | UDP       | 8472 |
-  | Incoming | workers         | UDP       | 8472 |
-  | Incoming | workers         | UDP       | 51871 |
-  | Incoming | masters         | UDP       | 51871 |
+  | Incoming | 0.0.0.0/0, ::/0 | TCP       | 59245 |
+  | Incoming | 0.0.0.0/0, ::/0 | ICMP      | -    |
+  | Incoming | 0.0.0.0/0, ::/0 | TCP       | 6443 |
+  | Incoming | 0.0.0.0/0, ::/0 | TCP       | 30000 - 32767 |
+  | Incoming | masters         | TCP       | *    |
+  | Incoming | masters         | UDP       | *    |
+  | Outgoing | masters         | UDP       | *    |
+  | Outgoing | masters         | TCP       | *    |
+  | Outgoing | *               | TCP       | 443  |
+  | Outgoing | *               | TCP       | 80   |
 
 ## Machines
 
