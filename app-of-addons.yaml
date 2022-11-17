@@ -22,25 +22,35 @@ spec:
   - https://github.com/alleaffengaffen/banana.git
 ---
 apiVersion: argoproj.io/v1alpha1
-kind: Application
+kind: ApplicationSet
 metadata:
   name: app-of-addons
   namespace: argocd
   annotations:
     argocd.argoproj.io/hook: PreSync
 spec:
-  destination:
-    name: ''
-    namespace: argocd
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: definitions/addons
-    repoURL: 'https://github.com/alleaffengaffen/banana.git'
-    targetRevision: HEAD
-  project: addons
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-    - ServerSideApply=true
+  generators:
+  - git:
+      repoURL: https://github.com/alleaffengaffen/banana.git
+      revision: HEAD
+      directories:
+      - path: addons/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: "addons"
+      source:
+        repoURL: https://github.com/alleaffengaffen/banana.git
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{path.basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
+        - ServerSideApply=true
