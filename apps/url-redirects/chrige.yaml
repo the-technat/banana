@@ -1,0 +1,14 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chrige-naehen-redirect
+  annotations:
+    nginx.ingress.kubernetes.io/permanent-redirect: https://www.swisstransfer.com/d/8c1733ce-e423-48ea-982f-ff9de1bd93fc
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: video.alleaffengaffe.ch
+  tls:
+  - hosts:
+    - video.alleaffengaffen.ch
+    secretName: video-alleaffengaffen-ch

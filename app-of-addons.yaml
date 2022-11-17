@@ -34,7 +34,7 @@ spec:
     namespace: argocd
     server: 'https://kubernetes.default.svc'
   source:
-    path: definitions
+    path: definitions/addons
     repoURL: 'https://github.com/alleaffengaffen/banana.git'
     targetRevision: HEAD
   project: addons
