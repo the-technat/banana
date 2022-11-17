@@ -4,10 +4,11 @@ metadata:
   name: chrige-naehen-redirect
   annotations:
     nginx.ingress.kubernetes.io/permanent-redirect: https://www.swisstransfer.com/d/8c1733ce-e423-48ea-982f-ff9de1bd93fc
+    cert-manager.io/cluster-issuer: letsencrypt-production
 spec:
   ingressClassName: nginx
   rules:
-  - host: video.alleaffengaffe.ch
+  - host: video.alleaffengaffen.ch
   tls:
   - hosts:
     - video.alleaffengaffen.ch
