@@ -1,5 +1,6 @@
 resources:
 - https://github.com/rancher/system-upgrade-controller/releases/download/v0.9.1/system-upgrade-controller.yaml
+- plan.yaml
 
 patchesStrategicMerge:
 - |-
