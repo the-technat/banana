@@ -15,6 +15,9 @@ cilium:
 
   l7Proxy: false
 
+  ipam:
+    mode: kubernetes
+
   hubble:
     enabled: true
     relay:
