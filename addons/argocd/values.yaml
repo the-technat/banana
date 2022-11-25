@@ -16,7 +16,7 @@ argo-cd:
             name: GitHub
             config:
               clientID: 26be52c1bdb04a4d6e1f
-              clientSecret: $github:clientSecret # references the sealed secret in the templates folder
+              clientSecret: $github-oidc:clientSecret # references the sealed secret in the templates folder
               orgs:
               - name: alleaffengaffen
     rbac:
