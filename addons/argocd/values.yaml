@@ -3,24 +3,9 @@ argo-cd:
     networkPolicy:
       create: true
 
-  controller:
-    args:
-      # -- define the application controller `--status-processors`
-      statusProcessors: "20"
-      # -- define the application controller `--operation-processors`
-      operationProcessors: "10"
-      # -- define the application controller `--app-hard-resync`
-      appHardResyncPeriod: "0"
-      # -- define the application controller `--app-resync`
-      appResyncPeriod: "20"
-      # -- define the application controller `--self-heal-timeout-seconds`
-      selfHealTimeout: "5"
-      # -- define the application controller `--repo-server-timeout-seconds`
-      repoServerTimeoutSeconds: "60"
-
   configs:
     cm:
-      url: "https://argo.alleaffengaffen.ch"
+      url: "https://cd.tools.alleaffengaffen.ch"
       server.rbac.log.enforce.enable: "true"
       exec.enabled: "true"
       admin.enabled: "true"
@@ -40,6 +25,12 @@ argo-cd:
         g, alleaffengaffen:orangutans, role:admin
       policy.default: role:readonly
 
+    params:
+      controller.status.processors: 20
+      controller.operation.processors: 10
+      controller.self.heal.timeout.seconds: 5
+      controller.repo.server.timeout.seconds: 60
+
   server:
     ingress:
       enabled: true
@@ -50,9 +41,9 @@ argo-cd:
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       ingressClassName: "nginx"
       hosts:
-      - argo.alleaffengaffen.ch
+      - cd.tools.alleaffengaffen.ch
       tls:
       - secretName: argocd-secret
         hosts:
-        - argo.alleaffengaffen.ch
+        - cd.tools.alleaffengaffen.ch
       https: true # TLS termination should happen on argocd-server (grpc)
