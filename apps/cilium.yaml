@@ -1,0 +1,69 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cilium
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-4"
+spec:
+  project: addons
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  source:
+    chart: cilium
+    repoURL: https://helm.cilium.io/
+    targetRevision: 1.12.x
+    helm:
+      version: v3
+      values: |-
+        rollOutCiliumPods: true
+
+        priorityClassName: "system-node-critical"
+
+        annotateK8sNode: true
+
+        containerRuntime:
+          integration: containerd
+          socketPath: /var/run/containerd/containerd.sock
+
+        l7Proxy: false
+
+        encryption:
+          enabled: true
+          type: wireguard
+
+        hubble:
+          enabled: true
+          relay:
+            enabled: true
+          ui:
+            enabled: true
+            rollOutPods: true
+
+        ingressController:
+          enabled: false
+          enforceHttps: true
+
+        hostFirewall:
+          enabled: false
+
+        policyEnforcementMode: "never"
+
+        kubeProxyReplacement: "strict"
+        k8sServiceHost: "banana.alleaffengaffen.ch"
+        k8sServicePort: "6443"

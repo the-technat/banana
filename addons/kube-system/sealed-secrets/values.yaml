@@ -1,6 +1,0 @@
-sealed-secrets:
-  fullnameOverride: "sealed-secrets-controller"
-  keyrenewperiod: "720h30m"
-  priorityClassName: "system-cluster-critical"
-  networkPolicy:
-    enabled: true

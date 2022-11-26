@@ -1,7 +1,0 @@
-apiVersion: v2
-name: kured
-version: 0.0.0
-dependencies:
-- name: kured
-  version: 2.15.x
-  repository: https://kubereboot.github.io/charts/

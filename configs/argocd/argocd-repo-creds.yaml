@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-ssh-creds
+  namespace: argocd
+  labels:
+    argocd.argoproj.io/secret-type: repo-creds
+stringData:
+  url: git@github.com
+  type: helm
+  sshPrivateKey: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+    QyNTUxOQAAACDoFFWeRq7ocBfwLo/xWAguPMIuBU9sQ5rtRKCnAfQrWQAAAJg+OvLrPjry
+    6wAAAAtzc2gtZWQyNTUxOQAAACDoFFWeRq7ocBfwLo/xWAguPMIuBU9sQ5rtRKCnAfQrWQ
+    AAAEDIAKka6lTyu2lFcbZ1WGCnf6HJiQEWkWV8gSRItDrDN+gUVZ5GruhwF/Auj/FYCC48
+    wi4FT2xDmu1EoKcB9CtZAAAAFXNlcnZpY2VfYXJnb2NkX2JhbmFuYQ==
+    -----END OPENSSH PRIVATE KEY-----

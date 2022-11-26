@@ -1,0 +1,90 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: ingress-nginx
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
+spec:
+  project: addons
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ingress-nginx
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  source:
+    chart: ingress-nginx
+    repoURL: https://kubernetes.github.io/ingress-nginx
+    targetRevision: 4.4.x
+    helm:
+      version: v3
+      values: |-
+        controller:
+          admissionWebhooks:
+            networkPolicyEnabled: true
+          extraArgs:
+            enable-ssl-passthrough: ""
+
+          # Will add custom configuration options to Nginx https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/
+          config: {}
+
+          # Will add custom headers before sending traffic to backends according to https://github.com/kubernetes/ingress-nginx/tree/main/docs/examples/customization/custom-headers
+          proxySetHeaders: {}
+
+          # Will add custom headers before sending response traffic to the client according to: https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/configmap/#add-headers
+          addHeaders: {}
+
+          # This section refers to the creation of the IngressClass resource
+          # IngressClass resources are supported since k8s >= 1.18 and required since k8s >= 1.19
+          ingressClassResource:
+            name: nginx
+            enabled: true
+            default: true
+            controllerValue: "k8s.io/ingress-nginx"
+
+          ## DaemonSet or Deployment
+          kind: DaemonSet
+
+          # The update strategy to apply to the Deployment or DaemonSet
+          rollingUpdate:
+            maxUnavailable: 1
+          type: RollingUpdate
+
+          # minReadySeconds to avoid killing pods before we are ready
+          minReadySeconds: 5
+
+          service:
+            annotations:
+              load-balancer.hetzner.cloud/location: hel1
+              load-balancer.hetzner.cloud/ipv4-rdns: banana.alleaffengaffen.ch
+              load-balancer.hetzner.cloud/ipv6-disabled: true
+              load-balancer.hetzner.cloud/name: ingress-nginx
+              load-balancer.hetzner.cloud/health-check-interval: 5s
+              load-balancer.hetzner.cloud/health-check-timeout: 2s
+              load-balancer.hetzner.cloud/health-check-retries: 5
+
+        defaultBackend:
+          enabled: true
+          replicaCount: 1
+
+          resources:
+            limits:
+              cpu: 100m
+              memory: 200Mi
+            requests:
+              cpu: 10m
+              memory: 20Mi
+        dhParam: LS0tLS1CRUdJTiBESCBQQVJBTUVURVJTLS0tLS0KTUlJQ0NBS0NBZ0VBaHNtRjdjMkppaHd4Zll4R3R1a1cweml1NlcvNndiaXQ4U1NXcXJ2cndDb0Y0WHRwYzQrZgpidEd0ZDZkb1dpdE9nUnFLNkVXcDdwZFMyb085OUN6Q2JHdnFBTktWR1pYSzVlTnM3K1l1K2lnaHBvT1hHZldvCjlhVGFkVjFWSE9zWEdNT3VBU0kzRXJYcW9OYUtTWkRwZUo1Tk9FK0NUa0RDVmJmQWNEZTV4dTlWbUJZZWZTcisKYjdwL0cwQ21aZFRWWmg4S29jRGJxSHJFaHVKYThHTUYwbFVnU1RkaVhUMklzTk1JNE93bzBkUmtvTXNuQitOTgpQVjFxUS9LbGlOSUR5eFNYcEw4eDRDQTZMR2xKSzd3cDd0NnFBb1NleXVBTWlIdFNCMHFZNEZQTFRIYTdqRFZnCkxiR2w2bTU3U2xpT1hJUXdpMGZnUDZjQWpZQ3l5YnJZUGdhWTl3TzVSRHM5ZzhMM0dNMkZjS0R4OHBYb3dmakwKOElJYk41SmFKdnFoSEpGKzNObW5CNnh5ZTVNV01QOVJmckU4UFpJVklQZWc5a0p2Z0hiYU5tR0JGSCtacjdSRAp3SGhEK1p6bENYYisxK2tKNSt4UFVqZHBucmllODN3RWV0RUV6OXNqRHc4L3BrVk5MNFpmM21qcXlKQjA0L0RYCkxzUFJaZWN6NWtoRmFlRWhKMzVuclJVdmp1ZjRrQUg3MUNPa0pMeUR6c1ZzY3dZSFpTalpuQWwzU0tkdkNwa3EKMWNHOWpxZVEzcHAwekdBOXRhYXVTaTQrM3U0ZVgyWGpHS3BRVjVUUjBILzZpVEdTd3lQV1REN1dNYTYvVm9rbgpPeWJPd1p2NmlGeFFTbzBOVDZCWXpEckJlYWgwajNoanN0WVdpd1dMN21CTWRXSjEwU3RnMDFjQ0FRST0KLS0tLS1FTkQgREggUEFSQU1FVEVSUy0tLS0tCg==
