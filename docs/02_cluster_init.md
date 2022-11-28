@@ -8,12 +8,16 @@ But there are of course some steps to highlight.
 
 This is my final init config:
 
+- [Kubeadm config reference](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/#kubeadm-k8s-io-v1beta3-JoinConfiguration)
+
 ```yaml
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 skipPhases:
   - addon/kube-proxy
+localAPIEndpoint:
+  advertiseAddress: 100.96.250.68
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 clusterName: banana
@@ -23,16 +27,23 @@ networking:
   dnsDomain: banana.k8s
   serviceSubnet: 10.111.0.0/16
   podSubnet: 10.222.0.0/16
-controlPlaneEndpoint: banana.alleaffengaffen.ch:6443
+controlPlaneEndpoint: 100.96.250.68:6443
+etcd:
+  local:
+    extraArgs:
+    peerCertSANs:
+    - "100.96.250.68"
+apiServer:
+  certSANs:
+  - "100.96.250.68"
+scheduler:
+  extraArgs:
+    address: "100.96.250.68"
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 cgroupDriver: systemd # must match the value you set for containerd
 ```
-
-## Join master nodes
-
-Just join with the command the init prints to stdout, no special config required
 
 ## Graceful node shutdown
 
@@ -43,7 +54,7 @@ See this [guide](https://kubernetes.io/docs/concepts/architecture/nodes/#gracefu
 For now, just install cilium with default values (except for kube-proxy). We're configuring the features we want to have later on:
 
 ```bash
-helm upgrade -i cilium cilium/cilium -n kube-system --set kubeProxyReplacement=strict --set k8sServiceHost=banana.alleaffengaffen.ch --set k8sServicePort=6443
+helm upgrade -i cilium cilium/cilium -n kube-system --set kubeProxyReplacement=strict --set k8sServiceHost=100.96.250.68 --set k8sServicePort=6443
 ```
 
 ## Argo CD
