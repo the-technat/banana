@@ -4,6 +4,9 @@
 
 - SSH-Key which is the default key
 - FW rules: only 59245/tcp open, everything else blocked incoming, outgoing has everything open
+- Backups enabled (just to be sure)
+- Tags (if you want)
+- Public IPv4/v6
 - Cloud Init:
   ```yaml
   #cloud-config <hostname>
@@ -77,3 +80,7 @@
     timeout: 30
     condition: true
   ```
+
+## Worker Nodes
+
+Not documented here as their setup is different.

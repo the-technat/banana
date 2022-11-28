@@ -1,4 +1,5 @@
 // This tailnet's ACLs are maintained in https://github.com/alleaffengaffen/banana.git
+// Domain: little-cloud.ts.net
 // Example/default ACLs for unrestricted connections.
 {
 	// Declare static groups of users beyond those in the identity service.

@@ -17,7 +17,7 @@ kind: InitConfiguration
 skipPhases:
   - addon/kube-proxy
 localAPIEndpoint:
-  advertiseAddress: 100.96.250.68
+  advertiseAddress: 100.95.10.95
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 clusterName: banana
@@ -27,23 +27,29 @@ networking:
   dnsDomain: banana.k8s
   serviceSubnet: 10.111.0.0/16
   podSubnet: 10.222.0.0/16
-controlPlaneEndpoint: 100.96.250.68:6443
+controlPlaneEndpoint: hawk.alleaffengaffen.ch:6443
 etcd:
   local:
     extraArgs:
+      advertise-client-urls: "https://100.95.10.95:2379"
+      initial-advertise-peer-urls: "https://100.95.10.95:2380"
+      initial-cluster: "hawk=https://100.95.10.95:2380"
+      listen-client-urls: "https://127.0.0.1:2379,https://100.95.10.95:2379"
+      listen-peer-urls: "https://100.95.10.95:2380"
+    serverCertSANs:
+    - "100.95.10.95"
     peerCertSANs:
-    - "100.96.250.68"
+    - "100.95.10.95"
 apiServer:
   certSANs:
-  - "100.96.250.68"
-scheduler:
-  extraArgs:
-    address: "100.96.250.68"
+  - "100.95.10.95"
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 cgroupDriver: systemd # must match the value you set for containerd
 ```
+
+Note: I'm using an DNS record here for the kubeapi to make sure we could add more masters in the future.
 
 ## Graceful node shutdown
 
@@ -54,7 +60,7 @@ See this [guide](https://kubernetes.io/docs/concepts/architecture/nodes/#gracefu
 For now, just install cilium with default values (except for kube-proxy). We're configuring the features we want to have later on:
 
 ```bash
-helm upgrade -i cilium cilium/cilium -n kube-system --set kubeProxyReplacement=strict --set k8sServiceHost=100.96.250.68 --set k8sServicePort=6443
+helm upgrade -i cilium cilium/cilium -n kube-system --set kubeProxyReplacement=strict --set k8sServiceHost=100.95.10.95 --set k8sServicePort=6443
 ```
 
 ## Argo CD
