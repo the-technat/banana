@@ -1,0 +1,13 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: "allow-argocd-egress"
+  namespace: argocd
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/component: repo-server
+      app.kubernetes.io/part-of: argocd
+  egress:
+    - toEntities:
+        - "all"

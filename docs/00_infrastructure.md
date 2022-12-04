@@ -1,13 +1,71 @@
-# Infrastructure
+# 00 - Basics & Infrastructure
 
-## Control Plane Node (Hetzner)
+## Introduction
+
+This is the documentation I wrote for my personal K8s cluster.
+Why I wrote a documentation about it? Well I'm presumably one of those strange engineers that likes writting docs. Or maybe it's just to that you can learn something from me and I still know how everything has been built?
+
+Anyway, let's get started with some important topics
+
+## Naming
+
+Naming thins is hard so I like names that have no relation to IT at all nor follow a specific scheme.
+
+I name:
+
+- my homelab as a hole `alleaffengaffen`
+- my k8s cluster `banana`
+- my private domain used inside K8s `banana.k8s`
+- my public domain used to expose things `alleaffengaffen.ch`
+- my mail for accounts related to the homelab `banane@alleaffengaffen.ch`
+- anything else must have either a fruit or animal in it's name:
+  - e.g master nodes are `hawk`'s
+  - worker nodes are `minion`'s
+
+## Basics
+
+Here are some general principles I follow:
+
+- All my code is stored in an Github organization called `alleaffengaffen`.
+- The issues in the `banana` repo serve as my bucket list of things I wanted to try out
+- My private network is not at home (as a homelab would assume) but in my tailnet `alleaffengaffen.org.github` using an awesome mesh-to-mesh VPN called [tailscale](https://tailscale.com).
+- My IDP where possible is Github.
+- I'm not using a specific cloud provider as my tailnet is cloud-agnostic.
+- I prefer Ubuntu 22.04 as my OS for servers
+- I don't automate stuff as I want to learn something, things can be automated when it must be efficient which my homelab is not
+- But I use GitOps and K8s operators
+- I'm never going to host real productive services on my homelab. But services that aren't really productive can be hosted there (like the website `alleaffengaffen.ch` or a private photo gallery only having a bit of traffic)
+- HA is not a requirement and mustn't be considered at any time
+- Use plain tools and do stuff on your own where possible, to learn something (e.g use kubeadm, not k3s or any other fancy tool)
+- Harden everything from the beginning!
+
+## Infrastructure
+
+We're building a single K8s cluster.
+
+### Tailnet config
+
+My tailnet is configured using the [policy.hujson](./../policy.hujson) according to [GitOps for tailscale ACLs](https://tailscale.com/kb/1204/gitops-acls/).
+
+### Control Plane
+
+I only a sigle node as my control-plane with local etcd as it's simpler, easier to restore and uses fewer resources (which are expensive for a homelab that's mainly for fun)
+
+This node is currently running on [Hetzner Cloud](https://www.hetzner.com/de/cloud).
+
+There I have created a project `alleaffengaffen` and added the following resources:
 
 - SSH-Key which is the default key
-- FW rules: only 59245/tcp open, everything else blocked incoming, outgoing has everything open
-- Backups enabled (just to be sure)
-- Tags (if you want)
-- Public IPv4/v6
-- Cloud Init:
+- A FW that only allows tcp/59245 from the internet but open everything for outgoing traffic
+- A server with the following specs:
+  - located in falkenstein
+  - type CPX11
+  - with backups enabled
+  - some tagsv
+  - public IPv4/v6 but no private net
+  - firewall applied
+  - a cloud-init config:
+
   ```yaml
   #cloud-config <hostname>
 
@@ -81,6 +139,10 @@
     condition: true
   ```
 
-## Worker Nodes
+### Worker Nodes
 
-Not documented here as their setup is different.
+Some of them are at home, some of them are in a cloud, I don't try to keep a list of all of them.
+
+## Next Step
+
+-> [01 - Operating System](./01_os.md)

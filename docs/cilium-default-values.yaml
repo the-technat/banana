@@ -1,0 +1,27 @@
+rollOutCiliumPods: true
+priorityClassName: "system-node-critical"
+annotateK8sNode: true
+containerRuntime:
+  integration: containerd
+  socketPath: /var/run/containerd/containerd.sock
+l7Proxy: false
+hubble:
+  enabled: true
+  relay:
+    enabled: true
+  ui:
+    enabled: true
+    rollOutPods: true
+
+ingressController:
+  enabled: false
+  enforceHttps: true
+
+ipam:
+  mode: kubernetes
+
+policyEnforcementMode: "always"
+
+kubeProxyReplacement: "strict"
+k8sServiceHost: "hawk.alleaffengaffen.ch"
+k8sServicePort: "6443"

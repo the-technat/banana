@@ -1,14 +1,8 @@
-# Cluster Initialization
-
-This is done primarly using my guide [here](https://github.com/the-technat/the-technat/blob/main/content/Kubernetes/k8s_kubeadm.md).
-
-But there are of course some steps to highlight.
+# 02 Cluster Initialization
 
 ## Init config
 
-This is my final init config:
-
-- [Kubeadm config reference](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/#kubeadm-k8s-io-v1beta3-JoinConfiguration)
+This is my final init config based on the [Kubeadm config reference](https://kubernetes.io/docs/reference/config-api/kubeadm-config.v1beta3/#kubeadm-k8s-io-v1beta3-JoinConfiguration):
 
 ```yaml
 ---
@@ -17,7 +11,7 @@ kind: InitConfiguration
 skipPhases:
   - addon/kube-proxy
 localAPIEndpoint:
-  advertiseAddress: 100.95.10.95
+  advertiseAddress: 100.95.10.95 # IP on tailscale0 NIC
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 clusterName: banana
@@ -27,7 +21,7 @@ networking:
   dnsDomain: banana.k8s
   serviceSubnet: 10.111.0.0/16
   podSubnet: 10.222.0.0/16
-controlPlaneEndpoint: hawk.alleaffengaffen.ch:6443
+controlPlaneEndpoint: hawk.alleaffengaffen.ch:6443 # public DNS entry
 etcd:
   local:
     extraArgs:
@@ -49,26 +43,20 @@ kind: KubeletConfiguration
 cgroupDriver: systemd # must match the value you set for containerd
 ```
 
-Note: I'm using an DNS record here for the kubeapi to make sure we could add more masters in the future.
+Note: I'm using an DNS record here for the kubeapi to make sure we could add more masters in the future + I make sure the public IP is nowhere hardcoded in the configs. For single master node that's not necessary as the FW is closed and noone connects to the etcd. But if at a future time I'd like to add more masters, they need to communicate over the tailnet.
 
 ## Graceful node shutdown
 
-See this [guide](https://kubernetes.io/docs/concepts/architecture/nodes/#graceful-node-shutdown) for more details, the fields are already present in `/var/lib/kubelet/config.yaml` so just change this.
+See this [guide](https://kubernetes.io/docs/concepts/architecture/nodes/#graceful-node-shutdown) for more details, the fields are already present in `/var/lib/kubelet/config.yaml` so just change them to `30s`, respectively `20s` for cricial pods.
 
-## CNI Installation
+## Multiple master nodes
 
-For now, just install cilium with default values (except for kube-proxy). We're configuring the features we want to have later on:
+Not yet a requirement, but they would require more configration than the join command prints out.
 
-```bash
-helm upgrade -i cilium cilium/cilium -n kube-system --set kubeProxyReplacement=strict --set k8sServiceHost=100.95.10.95 --set k8sServicePort=6443
-```
+## Worker nodes
 
-## Argo CD
+They don't need a special join config as the kubelet listens on `0.0.0.0`. Just copy the join command and paste it on the worker nodes.
 
-Now that we have a CNI, install Argo CD with default values:
+## Next Step
 
-```bash
-helm upgrade -i argocd argo/argo-cd -n argocd --create-namespace
-```
-
-We will see that argo cd get's the right values later on...
+-> [03 Core Addons](./03_core_addons.md)

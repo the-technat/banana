@@ -16,8 +16,8 @@ spec:
       selfHeal: true
       allowEmpty: false
     syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
+      - CreateNamespace=true
+      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
@@ -32,21 +32,12 @@ spec:
       version: v3
       values: |-
         rollOutCiliumPods: true
-
         priorityClassName: "system-node-critical"
-
         annotateK8sNode: true
-
         containerRuntime:
           integration: containerd
           socketPath: /var/run/containerd/containerd.sock
-
         l7Proxy: false
-
-        encryption:
-          enabled: true
-          type: wireguard
-
         hubble:
           enabled: true
           relay:
@@ -59,11 +50,11 @@ spec:
           enabled: false
           enforceHttps: true
 
-        hostFirewall:
-          enabled: false
+        ipam:
+          mode: kubernetes
 
-        policyEnforcementMode: "never"
+        policyEnforcementMode: "always"
 
         kubeProxyReplacement: "strict"
-        k8sServiceHost: "banana.alleaffengaffen.ch"
+        k8sServiceHost: "hawk.alleaffengaffen.ch"
         k8sServicePort: "6443"
