@@ -9,7 +9,7 @@ This menas that the default values shown here differ from what is actually set i
 We're doing this using the helm chart:
 
 ```bash
-helm repo add cilium https://helm.cilium.io/ 
+helm repo add cilium https://helm.cilium.io/
 helm upgrade -i cilium cilium/cilium -n kube-system -f cilium-default-values.yaml
 ```
 
@@ -19,48 +19,27 @@ The default-values are the following:
 rollOutCiliumPods: true
 priorityClassName: "system-node-critical"
 annotateK8sNode: true
+policyEnforcementMode: "always"
+operator:
+  replicas: 1
+  rollOutPods: true
 containerRuntime:
   integration: containerd
   socketPath: /var/run/containerd/containerd.sock
-l7Proxy: false
 hubble:
   enabled: true
+  rollOutPods: true
   relay:
     enabled: true
+    rollOutPods: true
   ui:
     enabled: true
     rollOutPods: true
-
-ingressController:
-  enabled: false
-  enforceHttps: true
-
 ipam:
   mode: kubernetes
-
-policyEnforcementMode: "always"
-
 kubeProxyReplacement: "strict"
 k8sServiceHost: "hawk.alleaffengaffen.ch"
 k8sServicePort: "6443"
-```
-
-Since we have enabled default-deny, we also need to add a NetworkPolicy for the `kube-system` namespace:
-
-```yaml
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
-  name: kube-system
-  namespace: kube-system
-spec:
-  endpointSelector: {}
-  ingress:
-    - fromEntities:
-      - all
-  egress:
-    - toEntities: 
-      - all
 ```
 
 ## GitOps - Argo CD
@@ -68,7 +47,7 @@ spec:
 Installed as well using helm:
 
 ```bash
-helm repo add argo https://argoproj.github.io/argo-helm 
+helm repo add argo https://argoproj.github.io/argo-helm
 helm upgrade -i argocd argo/argo-cd -n argocd --create-namespace -f argocd-default-values.yaml
 ```
 
@@ -207,6 +186,19 @@ extraObjects:
     egress:
       - toEntities:
         - remote-node
+- apiVersion: cilium.io/v2
+  kind: CiliumNetworkPolicy
+  metadata:
+    name: kube-system
+    namespace: kube-system
+  spec:
+    endpointSelector: {}
+    ingress:
+      - fromEntities:
+        - all
+    egress:
+      - toEntities:
+        - all
 ```
 
 Note: this will add some objects that onboard all other apps from Git. They require some reconcilation loops but that's fine.
