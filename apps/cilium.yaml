@@ -4,7 +4,7 @@ metadata:
   name: cilium
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-4"
+    argocd.argoproj.io/sync-wave: "-5"
 spec:
   project: addons
   destination:
@@ -34,27 +34,24 @@ spec:
         rollOutCiliumPods: true
         priorityClassName: "system-node-critical"
         annotateK8sNode: true
+        policyEnforcementMode: "always"
+        operator:
+          replicas: 1
+          rollOutPods: true
         containerRuntime:
           integration: containerd
           socketPath: /var/run/containerd/containerd.sock
-        l7Proxy: false
         hubble:
           enabled: true
+          rollOutPods: true
           relay:
             enabled: true
+            rollOutPods: true
           ui:
             enabled: true
             rollOutPods: true
-
-        ingressController:
-          enabled: false
-          enforceHttps: true
-
         ipam:
           mode: kubernetes
-
-        policyEnforcementMode: "always"
-
         kubeProxyReplacement: "strict"
         k8sServiceHost: "hawk.alleaffengaffen.ch"
         k8sServicePort: "6443"
