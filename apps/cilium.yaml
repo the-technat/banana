@@ -46,6 +46,13 @@ spec:
           - operator: Exists
             key: "node-role.kubernetes.io/control-plane"
             effect: "NoSchedule"
+          affinity:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                - matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: Exists
           resources:
             limits:
               cpu: 1000m
