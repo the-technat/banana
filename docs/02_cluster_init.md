@@ -57,6 +57,8 @@ Not yet a requirement, but they would require more configration than the join co
 
 They don't need a special join config as the kubelet listens on `0.0.0.0`. Just copy the join command and paste it on the worker nodes.
 
+Note: the InternalIP reported in the node object is the fist interface found. This is probably wrong. So either figure out how to add kubeletArgs on join or edit the `/var/lib/kubelet/kubelet-flags.env` and add the `--node-ip 100.74.16.32` arg at the end. A restart of the kubelet later port-forwarding works ;)
+
 ## Next Step
 
--> [03 Core Addons](./03_core_addons.md)
+- > [03 Core Addons](./03_core_addons.md)
