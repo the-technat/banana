@@ -1,6 +1,6 @@
 # 04 - Infrastructure Addons
 
-After the core addons have been installed and argocd started importing a bunch of addons from git, we can now start reconciling the things that need reconcilation
+After the core addons have been installed and argocd started importing a bunch of addons from git, we can now start reconciling the things that need reconcilation.
 
 ## Argo CD
 
