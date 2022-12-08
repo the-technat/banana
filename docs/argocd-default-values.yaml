@@ -89,21 +89,20 @@ extraObjects:
     - toEntities:
       - "all"
 - apiVersion: cilium.io/v2
-  kind: CiliumNetworkPolicy
+  kind: CiliumClusterwideNetworkPolicy
   metadata:
-    name: coredns
-    namespace: kube-system
+    name: "allow-egress-to-coredns"
   spec:
     endpointSelector: {}
     egress:
       - toEndpoints:
           - matchLabels:
-              io.kubernetes.pod.namespace: kube-system
-              k8s-app: kube-dns
+              "k8s:io.kubernetes.pod.namespace": kube-system
+              "k8s:k8s-app": kube-dns
         toPorts:
           - ports:
               - port: "53"
-                protocol: UDP
+                protocol: ANY
             rules:
               dns:
                 - matchPattern: "*"

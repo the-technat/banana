@@ -145,10 +145,9 @@ extraObjects:
     - toEntities:
       - "all"
 - apiVersion: cilium.io/v2
-  kind: CiliumNetworkPolicy
+  kind: CiliumClusterwideNetworkPolicy
   metadata:
     name: coredns
-    namespace: kube-system
   spec:
     endpointSelector: {}
     egress:

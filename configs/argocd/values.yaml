@@ -264,7 +264,7 @@ argo-cd:
     - apiVersion: cilium.io/v2
       kind: CiliumClusterwideNetworkPolicy
       metadata:
-        name: coredns
+        name: "allow-egress-to-coredns"
         annotations:
           argocd.argoproj.io/hook: PreSync
       spec:
@@ -272,12 +272,12 @@ argo-cd:
         egress:
           - toEndpoints:
               - matchLabels:
-                  io.kubernetes.pod.namespace: kube-system
-                  k8s-app: kube-dns
+                  "k8s:io.kubernetes.pod.namespace": kube-system
+                  "k8s:k8s-app": kube-dns
             toPorts:
               - ports:
                   - port: "53"
-                    protocol: UDP
+                    protocol: ANY
                 rules:
                   dns:
                     - matchPattern: "*"
