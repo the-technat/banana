@@ -41,159 +41,284 @@ argo-cd:
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
       ingressClassName: "nginx"
       hosts:
-      - cd.tools.alleaffengaffen.ch
-      tls:
-      - secretName: argocd-secret
-        hosts:
         - cd.tools.alleaffengaffen.ch
-      https: true # TLS termination should happen on argocd-server (grpc)
+      tls:
+        - secretName: argocd-secret
+          hosts:
+            - cd.tools.alleaffengaffen.ch
+      https: true # TLS termination should happen on argocd-server because of grpc
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+
+  controller:
+    enableStatefulSet: true
+    tolerations:
+      - operator: Exists
+        key: "node-role.kubernetes.io/control-plane"
+        effect: "NoSchedule"
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: node-role.kubernetes.io/control-plane
+                  operator: Exists
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+
+  notifications:
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+
+  redis:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    metrics:
+      enabled: true
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 5m
+          memory: 16Mi
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+
+  repoServer:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+
+  applicationSet:
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
 
   extraObjects:
-  - apiVersion: argoproj.io/v1alpha1
-    kind: AppProject
-    metadata:
-      name: addons
-      namespace: argocd
-      annotations:
-        argocd.argoproj.io/hook: PreSync
-    spec:
-      clusterResourceWhitelist:
-      - group: '*'
-        kind: '*'
-      description: Cluster infrastructure addons
-      destinations:
-      - name: in-cluster
-        namespace: '*'
-        server: https://kubernetes.default.svc
-      namespaceResourceWhitelist:
-      - group: '*'
-        kind: '*'
-      sourceRepos:
-      - '*'
-  - apiVersion: argoproj.io/v1alpha1
-    kind: AppProject
-    metadata:
-      name: apps
-      namespace: argocd
-      annotations:
-        argocd.argoproj.io/hook: PreSync
-    spec:
-      clusterResourceWhitelist:
-      - group: '*'
-        kind: '*'
-      description: Applications
-      destinations:
-      - name: in-cluster
-        namespace: '*'
-        server: https://kubernetes.default.svc
-      namespaceResourceWhitelist:
-      - group: '*'
-        kind: '*'
-      sourceRepos:
-      - https://github.com/alleaffengaffen/banana.git
-  - apiVersion: argoproj.io/v1alpha1
-    kind: Application
-    metadata:
-      name: app-of-apps
-      namespace: argocd
-      annotations:
-        argocd.argoproj.io/hook: PreSync
-    spec:
-      project: addons
-      source:
-        repoURL: https://github.com/alleaffengaffen/banana.git
-        targetRevision: HEAD
-        path: apps
-      destination:
-        server: https://kubernetes.default.svc
+    - apiVersion: argoproj.io/v1alpha1
+      kind: AppProject
+      metadata:
+        name: addons
         namespace: argocd
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-          allowEmpty: false
-        syncOptions:
-        - CreateNamespace=true
-        - ServerSideApply=true
-        retry:
-          limit: 5
-          backoff:
-            duration: 5s
-            factor: 2
-            maxDuration: 5m
-  - apiVersion: cilium.io/v2
-    kind: CiliumNetworkPolicy
-    metadata:
-      name: "allow-argocd-egress"
-      namespace: argocd
-      annotations:
-        argocd.argoproj.io/hook: PreSync
-    spec:
-      endpointSelector:
-        matchLabels:
-          app.kubernetes.io/component: repo-server
-          app.kubernetes.io/part-of: argocd
-      egress:
-      - toEntities:
-        - "all"
-  - apiVersion: cilium.io/v2
-    kind: CiliumNetworkPolicy
-    metadata:
-      name: coredns
-      namespace: kube-system
-    spec:
-      endpointSelector: {}
-      egress:
-        - toEndpoints:
-            - matchLabels:
-                io.kubernetes.pod.namespace: kube-system
-                k8s-app: kube-dns
-          toPorts:
-            - ports:
-                - port: "53"
-                  protocol: UDP
-              rules:
-                dns:
-                  - matchPattern: "*"
-  - apiVersion: cilium.io/v2
-    kind: CiliumClusterwideNetworkPolicy
-    metadata:
-      name: "allow-egress-to-cluster"
-      annotations:
-        argocd.argoproj.io/hook: PreSync
-    spec:
-      endpointSelector: {}
-      egress:
-      - toEntities:
-        - "cluster"
-  - apiVersion: "cilium.io/v2"
-    kind: CiliumClusterwideNetworkPolicy
-    metadata:
-      name: "cilium-health-checks"
-      annotations:
-        argocd.argoproj.io/hook: PreSync
-    spec:
-      endpointSelector:
-        matchLabels:
-          'reserved:health': ''
-      ingress:
-        - fromEntities:
-          - remote-node
-      egress:
-        - toEntities:
-          - remote-node
-  - apiVersion: cilium.io/v2
-    kind: CiliumNetworkPolicy
-    metadata:
-      name: kube-system
-      namespace: kube-system
-      annotations:
-        argocd.argoproj.io/hook: PreSync
-    spec:
-      endpointSelector: {}
-      ingress:
-        - fromEntities:
-          - all
-      egress:
-        - toEntities:
-          - all
+        annotations:
+          argocd.argoproj.io/hook: PreSync
+      spec:
+        clusterResourceWhitelist:
+          - group: "*"
+            kind: "*"
+        description: Cluster infrastructure addons
+        destinations:
+          - name: in-cluster
+            namespace: "*"
+            server: https://kubernetes.default.svc
+        namespaceResourceWhitelist:
+          - group: "*"
+            kind: "*"
+        sourceRepos:
+          - "*"
+    - apiVersion: argoproj.io/v1alpha1
+      kind: AppProject
+      metadata:
+        name: apps
+        namespace: argocd
+        annotations:
+          argocd.argoproj.io/hook: PreSync
+      spec:
+        clusterResourceWhitelist:
+          - group: "*"
+            kind: "*"
+        description: Applications
+        destinations:
+          - name: in-cluster
+            namespace: "*"
+            server: https://kubernetes.default.svc
+        namespaceResourceWhitelist:
+          - group: "*"
+            kind: "*"
+        sourceRepos:
+          - https://github.com/alleaffengaffen/banana.git
+    - apiVersion: argoproj.io/v1alpha1
+      kind: Application
+      metadata:
+        name: app-of-apps
+        namespace: argocd
+        annotations:
+          argocd.argoproj.io/hook: PreSync
+      spec:
+        project: addons
+        source:
+          repoURL: https://github.com/alleaffengaffen/banana.git
+          targetRevision: HEAD
+          path: apps
+        destination:
+          server: https://kubernetes.default.svc
+          namespace: argocd
+        syncPolicy:
+          automated:
+            prune: true
+            selfHeal: true
+            allowEmpty: false
+          syncOptions:
+            - CreateNamespace=true
+            - ServerSideApply=true
+          retry:
+            limit: 5
+            backoff:
+              duration: 5s
+              factor: 2
+              maxDuration: 5m
+    - apiVersion: cilium.io/v2
+      kind: CiliumNetworkPolicy
+      metadata:
+        name: "allow-argocd-egress"
+        namespace: argocd
+        annotations:
+          argocd.argoproj.io/hook: PreSync
+      spec:
+        endpointSelector:
+          matchLabels:
+            app.kubernetes.io/component: repo-server
+            app.kubernetes.io/part-of: argocd
+        egress:
+          - toEntities:
+              - "all"
+    - apiVersion: cilium.io/v2
+      kind: CiliumNetworkPolicy
+      metadata:
+        name: coredns
+        namespace: kube-system
+      spec:
+        endpointSelector: {}
+        egress:
+          - toEndpoints:
+              - matchLabels:
+                  io.kubernetes.pod.namespace: kube-system
+                  k8s-app: kube-dns
+            toPorts:
+              - ports:
+                  - port: "53"
+                    protocol: UDP
+                rules:
+                  dns:
+                    - matchPattern: "*"
+    - apiVersion: cilium.io/v2
+      kind: CiliumClusterwideNetworkPolicy
+      metadata:
+        name: "allow-egress-to-cluster"
+        annotations:
+          argocd.argoproj.io/hook: PreSync
+      spec:
+        endpointSelector: {}
+        egress:
+          - toEntities:
+              - "cluster"
+    - apiVersion: "cilium.io/v2"
+      kind: CiliumClusterwideNetworkPolicy
+      metadata:
+        name: "cilium-health-checks"
+        annotations:
+          argocd.argoproj.io/hook: PreSync
+      spec:
+        endpointSelector:
+          matchLabels:
+            "reserved:health": ""
+        ingress:
+          - fromEntities:
+              - remote-node
+        egress:
+          - toEntities:
+              - remote-node
+    - apiVersion: cilium.io/v2
+      kind: CiliumNetworkPolicy
+      metadata:
+        name: kube-system
+        namespace: kube-system
+        annotations:
+          argocd.argoproj.io/hook: PreSync
+      spec:
+        endpointSelector: {}
+        ingress:
+          - fromEntities:
+              - all
+        egress:
+          - toEntities:
+              - all
