@@ -179,8 +179,6 @@ argo-cd:
       metadata:
         name: addons
         namespace: argocd
-        annotations:
-          argocd.argoproj.io/hook: PreSync
       spec:
         clusterResourceWhitelist:
           - group: "*"
@@ -200,8 +198,6 @@ argo-cd:
       metadata:
         name: apps
         namespace: argocd
-        annotations:
-          argocd.argoproj.io/hook: PreSync
       spec:
         clusterResourceWhitelist:
           - group: "*"
@@ -221,8 +217,6 @@ argo-cd:
       metadata:
         name: app-of-apps
         namespace: argocd
-        annotations:
-          argocd.argoproj.io/hook: PreSync
       spec:
         project: addons
         source:
@@ -251,8 +245,6 @@ argo-cd:
       metadata:
         name: "allow-argocd-egress"
         namespace: argocd
-        annotations:
-          argocd.argoproj.io/hook: PreSync
       spec:
         endpointSelector:
           matchLabels:
@@ -265,8 +257,6 @@ argo-cd:
       kind: CiliumClusterwideNetworkPolicy
       metadata:
         name: "allow-egress-to-coredns"
-        annotations:
-          argocd.argoproj.io/hook: PreSync
       spec:
         endpointSelector: {}
         egress:
@@ -285,8 +275,6 @@ argo-cd:
       kind: CiliumClusterwideNetworkPolicy
       metadata:
         name: "allow-egress-to-cluster"
-        annotations:
-          argocd.argoproj.io/hook: PreSync
       spec:
         endpointSelector: {}
         egress:
@@ -296,8 +284,6 @@ argo-cd:
       kind: CiliumClusterwideNetworkPolicy
       metadata:
         name: "cilium-health-checks"
-        annotations:
-          argocd.argoproj.io/hook: PreSync
       spec:
         endpointSelector:
           matchLabels:
@@ -311,10 +297,8 @@ argo-cd:
     - apiVersion: cilium.io/v2
       kind: CiliumNetworkPolicy
       metadata:
-        name: kube-system
+        name: trusted-kube-system
         namespace: kube-system
-        annotations:
-          argocd.argoproj.io/hook: PreSync
       spec:
         endpointSelector: {}
         ingress:
