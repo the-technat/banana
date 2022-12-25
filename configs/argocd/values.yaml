@@ -26,6 +26,22 @@ argo-cd:
         g, alleaffengaffen:orangutans, role:admin
       policy.default: role:readonly
 
+  server:
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-production
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      ingressClassName: "nginx"
+      hosts:
+        - cd.tools.alleaffengaffen.ch
+      tls:
+        - secretName: argocd-secret
+          hosts:
+            - cd.tools.alleaffengaffen.ch
+      https: true # TLS termination should happen on argocd-server because of grpc
 
   extraObjects:
     - apiVersion: argoproj.io/v1alpha1
