@@ -3,6 +3,11 @@ argo-cd:
     networkPolicy:
       create: true
 
+  configs:
+    cm:
+      exec.enabled: "true"
+      admin.enabled: "true"
+
   extraObjects:
     - apiVersion: argoproj.io/v1alpha1
       kind: AppProject
