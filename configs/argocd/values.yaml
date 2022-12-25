@@ -5,10 +5,10 @@ argo-cd:
 
   configs:
     cm:
+      url: "https://cd.tools.alleaffengaffen.ch"
+      server.rbac.log.enforce.enable: "true"
       exec.enabled: "true"
       admin.enabled: "true"
-      server.rbac.log.enfore.enable: "true"
-      url: "https://cd.tools.alleaffengaffen.ch"
       dex.config: |
         connectors:
           - type: github
@@ -19,7 +19,6 @@ argo-cd:
               clientSecret: $github-oidc:clientSecret # references the sealed secret in the templates folder
               orgs:
               - name: alleaffengaffen
-
     rbac:
       policy.csv: |
         # Grant all members of 'alleaffengaffen:orangutans' admins
@@ -42,9 +41,120 @@ argo-cd:
           hosts:
             - cd.tools.alleaffengaffen.ch
       https: true # TLS termination should happen on argocd-server because of grpc
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
 
   controller:
     enableStatefulSet: true
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+
+  notifications:
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+
+  redis:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    metrics:
+      enabled: true
+      resources:
+        limits:
+          cpu: 100m
+          memory: 128Mi
+        requests:
+          cpu: 5m
+          memory: 16Mi
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+
+  repoServer:
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop: ["ALL"]
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 1
+        memory: 1Gi
+      requests:
+        cpu: 50m
+        memory: 64Mi
+
+  applicationSet:
+    containerSecurityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      seccompProfile:
+        type: RuntimeDefault
+      capabilities:
+        drop:
+          - ALL
+    metrics:
+      enabled: true
+    resources:
+      limits:
+        cpu: 500m
+        memory: 256Mi
+      requests:
+        cpu: 50m
+        memory: 64Mi
 
   extraObjects:
     - apiVersion: argoproj.io/v1alpha1
