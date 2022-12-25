@@ -43,6 +43,9 @@ argo-cd:
             - cd.tools.alleaffengaffen.ch
       https: true # TLS termination should happen on argocd-server because of grpc
 
+  controller:
+    enableStatefulSet: true
+
   extraObjects:
     - apiVersion: argoproj.io/v1alpha1
       kind: AppProject
