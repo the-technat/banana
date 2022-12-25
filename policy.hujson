@@ -1,32 +1,29 @@
 // This tailnet's ACLs are maintained in https://github.com/alleaffengaffen/banana.git
 // Domain: little-cloud.ts.net
 {
-	"groups": {
-		"group:orangutans": ["the-technat@github"],
-	},
-	"hosts": {
-		"hawk": "100.95.10.95",
-    "minion-01": "100.84.73.94",
-    "minion-02": "100.116.224.30",
-    "minion-03": "100.74.16.32",
-	},
+  "groups": {
+    "group:orangutans": ["the-technat@github"],
+  },
+  "hosts": {
+    "hawk": "100.95.10.95",
+  },
   "tagOwners": {
     "tag:master": ["group:orangutans"],
     "tag:worker": ["group:orangutans"],
     "tag:node": ["group:orangutans"]
   },
-	"acls": [
+  "acls": [
     // orangutans can do absolutely everything
-		{"action": "accept", "src": ["group:orangutans"], "dst": ["*:*"]},
+    {"action": "accept", "src": ["group:orangutans"], "dst": ["*:*"]},
     // node are allowed to connect to each other freely (but not to the admin devices)
-		{"action": "accept", "src": ["tag:node"], "dst": ["tag:node:*"]},
-	],
-	"ssh": [
-		{
-			"action": "check",
-			"src":    ["group:orangutans"],
-			"dst":    ["tag:node"],
-			"users":  ["autogroup:nonroot"],
-		},
-	],
+    {"action": "accept", "src": ["tag:node"], "dst": ["tag:node:*"]},
+  ],
+  "ssh": [
+    {
+      "action": "check",
+      "src":    ["group:orangutans"],
+      "dst":    ["tag:node"],
+      "users":  ["autogroup:nonroot"],
+    },
+  ],
 }
