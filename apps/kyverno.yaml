@@ -36,3 +36,7 @@ spec:
           enabled: true
 
         priorityClassName: 'system-cluster-critical'
+
+        extraArgs:
+          - --loggingFormat=text
+          - --backgroundScan=true

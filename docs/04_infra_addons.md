@@ -28,4 +28,4 @@ kubeseal --format yaml <input.yaml >output.yaml
 
 ## Kyverno
 
-Next on our list is Kyverno. It is there to make sure all other apps we apply are formed correctly due to some mutating and validating policy rules. It's sync-wave `-3` and therefore found to infrastructure addons.
+Next on our list is Kyverno. It is there to make sure all other apps we apply are formed correctly due to some mutating and validating policy rules. It's sync-wave `-3` and therefore an infrastructure addon.
