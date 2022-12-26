@@ -18,6 +18,7 @@ spec:
     syncOptions:
     - CreateNamespace=true
     - ServerSideApply=true
+    - Replace=true
     retry:
       limit: 5
       backoff:
@@ -33,3 +34,5 @@ spec:
       values: |-
         networkPolicy:
           enabled: true
+
+        priorityClassName: 'system-cluster-critical'
