@@ -1,21 +1,12 @@
 ---
-# Source: infomaniak-webhook/templates/namespace.yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: "cert-manager-infomaniak"
-  labels:
-    app: infomaniak-webhook
-    chart: infomaniak-webhook-0.2.0
-    release: infomaniak-webhook
-    heritage: Helm
----
 # Source: infomaniak-webhook/templates/rbac.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: infomaniak-webhook
   namespace: "cert-manager"
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -28,6 +19,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: infomaniak-webhook:domain-solver
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -48,6 +41,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: infomaniak-webhook:auth-delegator
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -61,13 +56,15 @@ subjects:
   - apiGroup: ""
     kind: ServiceAccount
     name: infomaniak-webhook
-    namespace: cert-manager-infomaniak
+    namespace: cert-manager
 ---
 # Source: infomaniak-webhook/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: infomaniak-webhook:domain-solver
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -90,6 +87,8 @@ kind: Role
 metadata:
   name: infomaniak-webhook:secret-reader
   namespace: cert-manager
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -115,6 +114,8 @@ kind: RoleBinding
 metadata:
   name: infomaniak-webhook:webhook-authentication-reader
   namespace: kube-system
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -128,7 +129,7 @@ subjects:
   - apiGroup: ""
     kind: ServiceAccount
     name: infomaniak-webhook
-    namespace: cert-manager-infomaniak
+    namespace: cert-manager
 ---
 # Source: infomaniak-webhook/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -136,6 +137,8 @@ kind: RoleBinding
 metadata:
   name: infomaniak-webhook:secret-reader
   namespace: cert-manager
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -149,7 +152,7 @@ subjects:
   - apiGroup: ""
     kind: ServiceAccount
     name: infomaniak-webhook
-    namespace: cert-manager-infomaniak
+    namespace: cert-manager
 ---
 # Source: infomaniak-webhook/templates/service.yaml
 apiVersion: v1
@@ -157,6 +160,8 @@ kind: Service
 metadata:
   name: infomaniak-webhook
   namespace: "cert-manager"
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -179,6 +184,8 @@ kind: Deployment
 metadata:
   name: infomaniak-webhook
   namespace: "cert-manager"
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -238,6 +245,8 @@ apiVersion: apiregistration.k8s.io/v1
 kind: APIService
 metadata:
   name: v1alpha1.acme.infomaniak.com
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -251,7 +260,7 @@ spec:
   versionPriority: 15
   service:
     name: infomaniak-webhook
-    namespace: cert-manager-infomaniak
+    namespace: cert-manager
   version: v1alpha1
 ---
 # Source: infomaniak-webhook/templates/pki.yaml
@@ -261,6 +270,8 @@ kind: Certificate
 metadata:
   name: infomaniak-webhook-ca
   namespace: "cert-manager"
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -281,6 +292,8 @@ kind: Certificate
 metadata:
   name: infomaniak-webhook-webhook-tls
   namespace: "cert-manager"
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -293,8 +306,8 @@ spec:
     name: infomaniak-webhook-ca
   dnsNames:
   - infomaniak-webhook
-  - infomaniak-webhook.cert-manager-infomaniak
-  - infomaniak-webhook.cert-manager-infomaniak.svc
+  - infomaniak-webhook.cert-manager
+  - infomaniak-webhook.cert-manager.svc
 ---
 # Source: infomaniak-webhook/templates/pki.yaml
 # Create a selfsigned Issuer, in order to create a root CA certificate for
@@ -304,6 +317,8 @@ kind: Issuer
 metadata:
   name: infomaniak-webhook-selfsign
   namespace: "cert-manager"
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -319,6 +334,8 @@ kind: Issuer
 metadata:
   name: infomaniak-webhook-ca
   namespace: "cert-manager"
+  annotations:
+    argocd.argoproj.io/hook: PostSync
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
