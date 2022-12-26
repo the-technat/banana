@@ -32,14 +32,4 @@ spec:
       version: v3
       values: |-
         podSecurityStandard: baseline
-
-        podSecuritySeverity: medium
-        podSecurityPolicies: []
-        includeOtherPolicies: []
-
-        includeRestrictedPolicies: []
-
-        failurePolicy: Fail
-        validationFailureAction: audit
-
-        validationFailureActionByPolicy: {}
+        validationFailureAction: enforce
