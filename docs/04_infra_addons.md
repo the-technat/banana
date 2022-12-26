@@ -2,6 +2,10 @@
 
 After the core addons have been installed and argocd started importing a bunch of addons from git, we can now start reconciling the things that need reconcilation.
 
+Some things to note:
+
+- Infrastructure Apps get the priority class `system-cluster-critical`. Argo CD too.
+
 ## Argo CD
 
 Must be adopted by itself to self manage it, adding more configs and also deploying the default netpols again. Sync it has sync-wave -5, you should probably already see how it has read the config from git and is trying to match this state. This won't work since the ingress controller is missing, but that's fine.
@@ -21,3 +25,7 @@ Here's how you encrypt a secret written in K8s yaml:
 ```bash
 kubeseal --format yaml <input.yaml >output.yaml
 ```
+
+## Kyverno
+
+Next on our list is Kyverno. It is there to make sure all other apps we apply are formed correctly due to some mutating and validating policy rules. It's sync-wave `-3` and therefore found to infrastructure addons.
