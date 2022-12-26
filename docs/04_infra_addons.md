@@ -4,7 +4,7 @@ After the core addons have been installed and argocd started importing a bunch o
 
 ## Argo CD
 
-Must be adopted by itself to self manage it, adding more configs and also deploying the default netpols again. Sync it has sync-wave -5, you should probably already see how has read the config from git and is trying to match this state. This won't work since the ingress controller is missing, but that's fine.
+Must be adopted by itself to self manage it, adding more configs and also deploying the default netpols again. Sync it has sync-wave -5, you should probably already see how it has read the config from git and is trying to match this state. This won't work since the ingress controller is missing, but that's fine.
 
 ## Cilium
 
@@ -16,7 +16,7 @@ In sync-wave -5 we also got the sealed secrets controller. This component is use
 
 To do this, you need the original values of your secrets again and need to go through every app.
 
-Here's how you encrypt a secrets written in K8s:
+Here's how you encrypt a secret written in K8s yaml:
 
 ```bash
 kubeseal --format yaml <input.yaml >output.yaml
