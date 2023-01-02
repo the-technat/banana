@@ -237,8 +237,8 @@ argo-cd:
       spec:
         endpointSelector:
           matchLabels:
-            app.kubernetes.io/component: repo-server
             app.kubernetes.io/part-of: argocd
+            app.kubernetes.io/component: repo-server
         egress:
           - toEntities:
               - "all"
