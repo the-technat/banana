@@ -6,6 +6,8 @@ spec:
  acme:
    server: https://acme-v02.api.letsencrypt.org/directory
    email: banane@alleaffengaffen.ch
+   privateKeySecretRef:
+     name: letsencrypt-production
    solvers:
     - selector: {}
       dns01:

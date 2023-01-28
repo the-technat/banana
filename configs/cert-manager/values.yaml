@@ -1,11 +1,6 @@
 cert-manager:
   global:
-    priorityClassName: "system-cluster-critical"
-
-    leaderElection:
-      namespace: "cert-manager"
-
-  installCRDs: true
+    priorityClassName: "infra"
 
   resources:
     requests:
@@ -15,8 +10,37 @@ cert-manager:
       cpu: 1
       memory: 1Gi
 
+  securityContext:
+    runAsNonRoot: true
+    seccompProfile:
+      type: RuntimeDefault
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
 
   webhook:
+    securePort: 10260
+    hostNetwork: true
+    configs:
+      securePort: 10260
+    securityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+
     resources:
       requests:
         cpu: 10m
@@ -25,10 +49,20 @@ cert-manager:
         cpu: 1
         memory: 1Gi
 
-    networkPolicy:
-      enabled: true
-
   cainjector:
+    securityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+
     resources:
       requests:
         cpu: 10m
@@ -38,10 +72,15 @@ cert-manager:
         memory: 1Gi
 
   startupapicheck:
-    resources:
-      requests:
-        cpu: 10m
-        memory: 32Mi
-      limits:
-        cpu: 1
-        memory: 1Gi
+    securityContext:
+      runAsNonRoot: true
+      seccompProfile:
+        type: RuntimeDefault
+
+    containerSecurityContext:
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+          - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true

@@ -2,7 +2,9 @@
 
 Without any tools, the cluster is not fully functional. Two of the most critical addons we need are [Cilium](https://cilium.io) and [Argo CD](https://argoproj.io). They are installed manually in a first run, but later on managed by Argo CD using GitOps.
 
-This menas that the default values shown here differ from what is actually set in the repo's configs.
+Note: Core Addons are also addons that are assigned to the `system-cluster-critical` priorityClass and get the sync-wave `-5` in argocd.
+
+This means that the default values shown here differ from what is actually set in the repo's configs.
 
 ## CNI - Cilium
 
@@ -33,7 +35,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 kubectl port-forward svc/argocd-server 8080:80 # open http://localhost:8080
 ```
 
-** Change the default admin password! **
+**Change the default admin password!**
 
 ## Next Steps
 

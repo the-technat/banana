@@ -41,7 +41,7 @@ argo-cd:
           hosts:
             - cd.tools.alleaffengaffen.ch
       https: true # TLS termination should happen on argocd-server because of grpc
-    priorityClassName: 'system-cluster-critical'
+    priorityClassName: "system-cluster-critical"
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -60,7 +60,7 @@ argo-cd:
 
   controller:
     enableStatefulSet: true
-    priorityClassName: 'system-cluster-critical'
+    priorityClassName: "system-cluster-critical"
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -78,7 +78,7 @@ argo-cd:
         memory: 128Mi
 
   notifications:
-    priorityClassName: 'system-cluster-critical'
+    priorityClassName: "system-cluster-critical"
     containerSecurityContext:
       runAsNonRoot: true
       readOnlyRootFilesystem: true
@@ -99,7 +99,7 @@ argo-cd:
         memory: 64Mi
 
   redis:
-    priorityClassName: 'system-cluster-critical'
+    priorityClassName: "system-cluster-critical"
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -124,7 +124,7 @@ argo-cd:
         memory: 64Mi
 
   repoServer:
-    priorityClassName: 'system-cluster-critical'
+    priorityClassName: "system-cluster-critical"
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -142,7 +142,7 @@ argo-cd:
         memory: 64Mi
 
   applicationSet:
-    priorityClassName: 'system-cluster-critical'
+    priorityClassName: "system-cluster-critical"
     containerSecurityContext:
       runAsNonRoot: true
       readOnlyRootFilesystem: true
@@ -296,3 +296,10 @@ argo-cd:
         egress:
           - toEntities:
               - all
+    - apiVersion: scheduling.k8s.io/v1
+      description: Used for infra critical pods that must run for the apps to function properly
+      kind: PriorityClass
+      metadata:
+        name: infra
+      preemptionPolicy: PreemptLowerPriority
+      value: 1000000000
