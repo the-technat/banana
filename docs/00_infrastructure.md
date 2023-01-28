@@ -47,6 +47,8 @@ We're building a single K8s cluster.
 
 My tailnet is configured using the [policy.hujson](./../policy.hujson) according to [GitOps for tailscale ACLs](https://tailscale.com/kb/1204/gitops-acls/).
 
+Note: Since Hetzner injects their own DNS servers onto every server and don't remove the IPv6 ones if you don't have an IPv6, we need to override local DNS in the tailscale to make sure coredns has valid nameservers configured.
+
 ### Control Plane
 
 I only a sigle node as my control-plane with local etcd as it's simpler, easier to restore and uses fewer resources (which are expensive for a homelab that's mainly for fun)
@@ -84,7 +86,7 @@ There I have created a project `alleaffengaffen` and added the following resourc
     sources:
       kubernetes:
         source: "deb [signed-by=$KEY_FILE] https://apt.kubernetes.io/ kubernetes-xenial main"
-        keyid: 7F92E05B31093BEF5A3C2D38FEEA9169307EA071
+        keyid: B53DC80D13EDEF05
   package_update: true
   package_upgrade: true
   packages:

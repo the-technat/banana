@@ -16,8 +16,8 @@ spec:
       selfHeal: true
       allowEmpty: false
     syncOptions:
-    - CreateNamespace=true
-    - ServerSideApply=true
+      - CreateNamespace=true
+      - ServerSideApply=true
     retry:
       limit: 5
       backoff:
@@ -27,22 +27,22 @@ spec:
   source:
     chart: kured
     repoURL: https://kubereboot.github.io/charts/
-    targetRevision: 2.15.x
+    targetRevision: 4.2.x
     helm:
       version: v3
       values: |-
         configuration:
-          rebootDays: [mo, tu,we,th,fr]                # only reboot on these days (default [su,mo,tu,we,th,fr,sa])
-          endTime: "6am"                   # only reboot before this time of day (default "23:59")
+          rebootDays: [mo, tu,we,th,fr]
+          endTime: "6am"            
           startTime: "10pm"
-          drainTimeout: ""              # timeout after which the drain is aborted (default: 0, infinite time)
-          timeZone: "Europe/Zurich"                  # time-zone to use (valid zones from "time" golang package)
+          drainTimeout: "1h"              
+          timeZone: "Europe/Zurich"       
           annotateNodes: true
 
-      resources:
-        limits:
-          cpu: 5m
-          memory: 48Mi
-        requests:
-          cpu: 1m
-          memory: 16Mi
+        resources:
+          limits:
+            cpu: 5m
+            memory: 48Mi
+          requests:
+            cpu: 1m
+            memory: 16Mi
