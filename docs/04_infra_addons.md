@@ -22,4 +22,15 @@ Nothing to do here, it got applied automatically and is hopefully already reconc
 
 ## Cert-Manager
 
-Needs a secret you should reencrypt.
+Reencrypt the `infomaniak-api-credentials` secret.
+
+## Ingress-nginx
+
+Reencrypt the `tailscale-config` secret so that it can reach tailscale.
+
+Note: The ingress resource will report the ClusterIP of the ingress-nginx service as it's external IP. This will cause external-dns to not work. Solve this either by manually adding the DNS record or adding the following annotation to your ingress:
+
+```yaml
+annotations:
+  external-dns.alpha.kubernetes.io/target: ingress-nginx-proxy.little-cloud.ts.net
+```

@@ -1,0 +1,19 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: tailscale
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/part-of: tailscale
+  ingress:
+    - {}
+  egress:
+    - toFQDNs:
+        - matchName: log.tailscale.io
+      toPorts:
+        - ports:
+            - port: "443"
+    - toPorts:
+        - ports:
+            - port: "51820"
