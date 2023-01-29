@@ -35,7 +35,10 @@ ingress-nginx:
     containerSecurityContext:
       runAsUser: 101
       allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: false
       capabilities:
+        add:
+          - NET_BIND_SERVICE
         drop:
           - ALL
   defaultBackend:
