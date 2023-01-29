@@ -10,7 +10,7 @@ spec:
   project: addons
   destination:
     server: https://kubernetes.default.svc
-    namespace:
+    namespace: tailscale
   syncPolicy:
     automated:
       prune: true
