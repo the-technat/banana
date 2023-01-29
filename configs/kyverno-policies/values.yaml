@@ -122,6 +122,15 @@ kyverno-policies:
                     - hubble-ui
         - resources:
             namespaces:
+              - kured
+            selector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: In
+                  values:
+                    - kured
+        - resources:
+            namespaces:
               - kube-system
             selector:
               matchLabels:
