@@ -21,6 +21,15 @@ kyverno-policies:
             selector:
               matchLabels:
                 k8s-app: cilium
+        - resources:
+          namespaces:
+            - tailscale
+          selector:
+            matchexpressions:
+              - key: app.kubernetes.io/name
+                operator: in
+                values:
+                  - tailscale
     disallow-host-namespaces:
       any:
         - resources:
@@ -124,11 +133,20 @@ kyverno-policies:
             namespaces:
               - kured
             selector:
-              matchExpressions:
+              matchexpressions:
                 - key: app.kubernetes.io/name
-                  operator: In
+                  operator: in
                   values:
                     - kured
+        - resources:
+          namespaces:
+            - tailscale
+          selector:
+            matchexpressions:
+              - key: app.kubernetes.io/name
+                operator: in
+                values:
+                  - tailscale
         - resources:
             namespaces:
               - kube-system
@@ -164,6 +182,15 @@ kyverno-policies:
                 name: cilium-operator
                 io.cilium/app: operator
         - resources:
+          namespaces:
+            - tailscale
+          selector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - tailscale
+        - resources:
             selector:
               matchExpressions:
                 - key: app.kubernetes.io/name
@@ -193,6 +220,15 @@ kyverno-policies:
                     - hubble-relay
                     - hubble-ui
                     - kube-dns
+        - resources:
+          namespaces:
+            - tailscale
+          selector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - tailscale
         - resources:
             namespaces:
               - kube-system
