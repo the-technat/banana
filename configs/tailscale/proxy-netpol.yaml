@@ -14,6 +14,9 @@ spec:
     # Allow proxy to talk to tailscale service (currently no idea what type of connections)
     - toEntities:
         - world
+    # Allow connections to the kubeapi
+    - toEntities:
+        - "kube-apiserver"
     # Allow proxy to forward requests to ingress-nginx
     - toEndpoints:
         - matchLabels:

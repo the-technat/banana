@@ -34,3 +34,5 @@ Note: The ingress resource will report the ClusterIP of the ingress-nginx servic
 annotations:
   external-dns.alpha.kubernetes.io/target: ingress-nginx-proxy.little-cloud.ts.net
 ```
+
+Don't forget to authorize and tag the new machine in tailscale once it comes up the first time! Otherwise it won't be able to talk to the other services.
