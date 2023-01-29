@@ -1,0 +1,21 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: ingress-nginx
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+  ingress:
+    # Allow tailscale proxy to access ingress-nginx
+    - fromEndpoints:
+      - matchLabels:
+          app.kubernetes.io/name: tailscale
+          io.kubernetes.pod.namespace: tailscale
+      toPorts:
+        - ports:
+            - port: "443"
+        - ports:
+            - port: "80"
+  # - fromEntities:
+    # - "all"

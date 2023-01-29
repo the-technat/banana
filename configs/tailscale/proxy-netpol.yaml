@@ -7,13 +7,20 @@ spec:
     matchLabels:
       app.kubernetes.io/part-of: tailscale
   ingress:
-    - {}
+    # Entire telnet should be able to reach the proxy
+    - fromEntities:
+        - world
   egress:
-    - toFQDNs:
-        - matchName: log.tailscale.io
+    # Allow proxy to talk to tailscale service (currently no idea what type of connections)
+    - toEntities:
+        - world
+    # Allow proxy to forward requests to ingress-nginx
+    - toEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+            io.kubernetes.pod.namespace: ingress-nginx
       toPorts:
         - ports:
             - port: "443"
-    - toPorts:
         - ports:
-            - port: "51820"
+            - port: "80"
