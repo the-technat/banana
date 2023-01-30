@@ -11,6 +11,9 @@ spec:
     - toEntities:
         - "kube-apiserver"
   ingress:
+    # Allow webhooks
+    - fromEntities:
+      - "kube-apiserver"
     # Allow tailscale proxy to access ingress-nginx
     - fromEndpoints:
       - matchLabels:

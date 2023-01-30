@@ -28,4 +28,4 @@ spec:
   source:
     path: configs/kyverno
     repoURL: https://github.com/alleaffengaffen/banana.git
-    targetRevision: head
+    targetRevision: HEAD
