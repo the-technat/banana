@@ -21,7 +21,7 @@ networking:
   dnsDomain: banana.k8s
   serviceSubnet: 10.111.0.0/16
   podSubnet: 10.222.0.0/16
-controlPlaneEndpoint: hawk.alleaffengaffen.ch:6443 # public DNS entry
+controlPlaneEndpoint: 100.95.10.95:6443
 etcd:
   local:
     extraArgs:

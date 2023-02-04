@@ -20,5 +20,5 @@ hubble:
 ipam:
   mode: kubernetes
 kubeProxyReplacement: "strict"
-k8sServiceHost: "hawk.alleaffengaffen.ch"
+k8sServiceHost: "100.95.10.95"
 k8sServicePort: "6443"
