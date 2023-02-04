@@ -1,0 +1,15 @@
+apiVersion: bitnami.com/v1alpha1
+kind: SealedSecret
+metadata:
+  creationTimestamp: null
+  name: infomaniak-api-credentials
+  namespace: cert-manager
+spec:
+  encryptedData:
+    api-token: AgBmPd+UUxKk6fIFN7ZSJ4w6qKGb9dSemw4tBVHWB1AOrVjEHnKK6oekkqOqSLkNir6phkOKa6h2H2ZlU8IkxJcFEkt+ml5ak1dPkG5ZdrnUIOLpa8lOx5VsI8tLlGBt67xXcLvQGa5fgg/1IR0yRiqwfRqDaxcm8xFOm1SW20WGeFFxglvJTWHv+h51d6W3FlOgSF+22OzN9+zuFxQrSbNVRLiRdrAM+PhgWvFgoOhSwsw7Ouel7N3DALRdQzDQbh6xq9BJLlhhkkmEfNtXM4M5EP7e6a/GtxE5EavUs8dhhRLv4b1VfSVFpUuLnHypCQ06ELvtPxaEA4JJJP8KND/GTBlADU6UUCi5nE86phTEEYfmsf1yZejGJdSS21xk5Wy+xdzZBqS8rviLRxOjnvpByC0DB6hrmwXTleHy1BjZxpmFhbNDESJmT7bL7bHIwt289skfQ6yqZEjZxkxt3qh/U+8Pvi5kL60S6rX1MMwWgg5NXmO7VxRQck0CFYVQvTDGZnC1WdhjOb0tws45TYDhsI3JJXcXSiQ/TD1SKImDU64Gt1FdGsXeAktnMmfTFls3x+R/m1u2dq+LctHpOngaCf74OOgZ9cZRL8sJjeXPlwMnPXOC6zb0IxpUJq5Ka7+SNHbd+5aSBAXUT2HPjfdohc5pv7nnb5zPG+FYcRZkOdz4cyGTnWcFUxZVmb3k+vJgBuF/6qP3qbtHWDFNjmfZ
+  template:
+    metadata:
+      creationTimestamp: null
+      name: infomaniak-api-credentials
+      namespace: cert-manager
+    type: Opaque
