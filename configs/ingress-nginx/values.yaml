@@ -15,16 +15,6 @@ ingress-nginx:
     kind: Deployment
     replicas: 1
     minReadySeconds: 5
-    affinity:
-      nodeAffinity:
-        requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchFields:
-            - key: metadata.name
-              operator: In
-              values:
-              - minion-03
-
 
     resources:
       limits:
