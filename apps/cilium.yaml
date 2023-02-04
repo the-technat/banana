@@ -34,7 +34,8 @@ spec:
         rollOutCiliumPods: true
         priorityClassName: "system-node-critical"
         annotateK8sNode: true
-        policyEnforcementMode: "always"
+        #policyEnforcementMode: "always"
+        policyEnforcementMode: "never"
         operator:
           replicas: 1
           rollOutPods: true
