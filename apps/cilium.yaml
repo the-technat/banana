@@ -110,8 +110,6 @@ spec:
                 requests:
                   cpu: 100m
                   memory: 24Mi
-        #ipam:
-        #  mode: kubernetes
         kubeProxyReplacement: "strict"
         k8sServiceHost: "hawk.alleaffengaffen.ch"
         k8sServicePort: "6443"

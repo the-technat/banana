@@ -24,10 +24,6 @@ cert-manager:
     runAsNonRoot: true
 
   webhook:
-    securePort: 10260
-    hostNetwork: true
-    configs:
-      securePort: 10260
     securityContext:
       runAsNonRoot: true
       seccompProfile:
