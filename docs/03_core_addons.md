@@ -39,4 +39,4 @@ kubectl port-forward svc/argocd-server 8080:80 # open http://localhost:8080
 
 ## Next Steps
 
--> [04 Infrastructure Addons](./04_ifnra_addons.md)
+-> [04 Infrastructure Addons](./04_infra_addons.md)
