@@ -2,7 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: ingress-nginx
+  name: contour-private
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "-3"
@@ -10,7 +10,7 @@ spec:
   project: addons
   destination:
     server: https://kubernetes.default.svc
-    namespace: ingress-nginx
+    namespace: contour-private
   syncPolicy:
     automated:
       prune: true
@@ -26,6 +26,6 @@ spec:
         factor: 2
         maxDuration: 3m
   source:
-    path: configs/ingress-nginx
+    path: configs/contour-private
     repoURL: https://github.com/alleaffengaffen/banana.git
     targetRevision: HEAD

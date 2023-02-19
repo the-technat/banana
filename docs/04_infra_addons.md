@@ -23,6 +23,19 @@ Nothing to do here, it got applied automatically and is hopefully already reconc
 ## Cert-Manager
 
 Reencrypt the `infomaniak-api-credentials` secret.
+Note: The Token is not an application password but an API token with the `domain` scope!
+
+## Contour
+
+We have two different contour deployments for private and public services.
+
+### Private
+
+We basically copied the setup described here <https://schmatzler.dev/articles/private-kubernetes-ingress-with-tailscale>.
+
+### Public
+
+The difference to the private one is only that we don't manage the CRDs and deploy to another namespace with another non-default ingress class called `public`.
 
 ## Ingress-nginx
 
