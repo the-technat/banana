@@ -10,40 +10,23 @@ apiVersion: kubeadm.k8s.io/v1beta3
 kind: InitConfiguration
 skipPhases:
   - addon/kube-proxy
-localAPIEndpoint:
-  advertiseAddress: 100.95.10.95 # IP on tailscale0 NIC
 ---
 apiVersion: kubeadm.k8s.io/v1beta3
 clusterName: banana
 kind: ClusterConfiguration
-kubernetesVersion: 1.25.4
+kubernetesVersion: 1.26.1
 networking:
   dnsDomain: banana.k8s
   serviceSubnet: 10.111.0.0/16
   podSubnet: 10.222.0.0/16
-controlPlaneEndpoint: 100.95.10.95:6443
-etcd:
-  local:
-    extraArgs:
-      advertise-client-urls: "https://100.95.10.95:2379"
-      initial-advertise-peer-urls: "https://100.95.10.95:2380"
-      initial-cluster: "hawk=https://100.95.10.95:2380"
-      listen-client-urls: "https://127.0.0.1:2379,https://100.95.10.95:2379"
-      listen-peer-urls: "https://100.95.10.95:2380"
-    serverCertSANs:
-    - "100.95.10.95"
-    peerCertSANs:
-    - "100.95.10.95"
-apiServer:
-  certSANs:
-  - "100.95.10.95"
+controlPlaneEndpoint: api.alleaffengaffen.ch:6443
 ---
 apiVersion: kubelet.config.k8s.io/v1beta1
 kind: KubeletConfiguration
 cgroupDriver: systemd # must match the value you set for containerd
 ```
 
-Note: I'm using an DNS record here for the kubeapi to make sure we could add more masters in the future + I make sure the public IP is nowhere hardcoded in the configs. For single master node that's not necessary as the FW is closed and noone connects to the etcd. But if at a future time I'd like to add more masters, they need to communicate over the tailnet.
+Note: I'm using an DNS record here for the kubeapi to make sure we could add more masters in the future.
 
 ## Graceful node shutdown
 
@@ -56,8 +39,6 @@ Not yet a requirement, but they would require more configration than the join co
 ## Worker nodes
 
 They don't need a special join config as the kubelet listens on `0.0.0.0`. Just copy the join command and paste it on the worker nodes.
-
-Note: the InternalIP reported in the node object is the fist interface found. This is probably wrong. So either figure out how to add kubeletArgs on join or edit the `/var/lib/kubelet/kubelet-flags.env` and add the `--node-ip 100.74.16.32` arg at the end. A restart of the kubelet later port-forwarding works ;)
 
 ## Next Step
 

@@ -17,8 +17,11 @@ hubble:
   ui:
     enabled: true
     rollOutPods: true
-ipam:
-  mode: kubernetes
+l7Proxy: false # not possible with encryption
+encryption:
+  enabled: true
+  type: wireguard
+  nodeEncryption: true
 kubeProxyReplacement: "strict"
-k8sServiceHost: "100.95.10.95"
+k8sServiceHost: "api.alleaffengaffen.ch"
 k8sServicePort: "6443"

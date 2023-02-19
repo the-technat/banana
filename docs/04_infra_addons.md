@@ -1,8 +1,24 @@
 # 04 - Infrastructure Addons
 
-After the core addons have been installed and argocd started importing a bunch of addons from git, we can now start reconciling the things that need reconcilation.
+After the core addons have been installed we can start onboarding all apps properly. Argo CD and cilium aren't finally configured with the default. This was just necessary to make sure we can continue with the next step.
 
 Infrastructure addons are important too, but not crucial for the cluster to work properly, therefore they get the sync-wave `-3` and the priorityClass `infra` that was created by the Argo CD addititonal values.
+
+## Onboarding
+
+To start with the infrastrucutre addons, we deploy the app-of-apps for argocd:
+
+```bash
+kubectl apply -f default-app-of-apps.yaml
+```
+
+## Argo CD
+
+Argo CD will reconcile itself mostly automatically. Ingress, proper auth, all the core required policies and more.
+
+## Cilium
+
+Will reconcile itself, add host-firewall and policies for the nodes.
 
 ## Sealed Secrets Reencryption
 
@@ -20,6 +36,7 @@ kubeseal --format yaml <input.yaml >output.yaml
 
 Nothing to do here, it got applied automatically and is hopefully already reconciled and injected a bunch of policies.
 
+#
 ## Cert-Manager
 
 Reencrypt the `infomaniak-api-credentials` secret.
