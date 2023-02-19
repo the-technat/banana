@@ -52,9 +52,22 @@ spec:
     spec:
       serviceAccountName: tailscale
       terminationGracePeriodSeconds: 300
+      initContainers:
+        - name: sysctler
+          image: busybox
+          securityContext:
+            privileged: true
+          command: ["/bin/sh"]
+          args:
+            - -c
+            - sysctl -w net.ipv4.ip_forward=1 net.ipv6.conf.all.forwarding=1
+          resources:
+            requests:
+              cpu: 1m
+              memory: 1Mi
       containers:
         - name: tailscale
-          image: ghcr.io/tailscale/tailscale:v1.36
+          image: ghcr.io/tailscale/tailscale:latest
           securityContext:
             capabilities:
               add:
@@ -67,15 +80,19 @@ spec:
               cpu: 1
               memory: 1Gi
           env:
+            - name: TS_DEBUG_LOG
+              value: "1"
             - name: TS_USERSPACE
               value: "false"
-            - name: TS_AUTH_KEY
+            - name: TS_AUTHKEY
               valueFrom:
                 secretKeyRef:
                   name: tailscale-config
                   key: TS_AUTH_KEY
             - name: TS_KUBE_SECRET
               value: tailscale-config
+            - name: TS_AUTH_ONCE
+              value: "true"
             - name: TS_DEST_IP
               value: 10.111.0.100 # ClusterIP of contour-private
             - name: TS_EXTRA_ARGS

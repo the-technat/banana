@@ -4,6 +4,8 @@ argo-cd:
       create: true
 
   configs:
+    params:
+      server.insecure: true
     cm:
       url: "https://cd.tools.alleaffengaffen.ch"
       server.rbac.log.enforce.enable: "true"
@@ -30,9 +32,7 @@ argo-cd:
       enabled: true
       annotations:
         cert-manager.io/cluster-issuer: letsencrypt-production
-        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-        nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+        ingress.kubernetes.io/force-ssl-redirect: "true"
       ingressClassName: "private"
       hosts:
         - cd.tools.alleaffengaffen.ch
@@ -40,7 +40,6 @@ argo-cd:
         - secretName: argocd-secret
           hosts:
             - cd.tools.alleaffengaffen.ch
-      https: true # TLS termination should happen on argocd-server because of grpc
     priorityClassName: "system-cluster-critical"
     containerSecurityContext:
       allowPrivilegeEscalation: false

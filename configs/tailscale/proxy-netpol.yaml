@@ -5,7 +5,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/part-of: tailscale
+      app.kubernetes.io/name: tailscale
   ingress:
     # Entire telnet should be able to reach the proxy
     - fromEntities:
