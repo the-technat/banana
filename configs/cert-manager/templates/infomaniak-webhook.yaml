@@ -20,7 +20,7 @@ kind: ClusterRole
 metadata:
   name: infomaniak-webhook:domain-solver
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -42,7 +42,7 @@ kind: ClusterRoleBinding
 metadata:
   name: infomaniak-webhook:auth-delegator
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -64,7 +64,7 @@ kind: ClusterRoleBinding
 metadata:
   name: infomaniak-webhook:domain-solver
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -88,7 +88,7 @@ metadata:
   name: infomaniak-webhook:secret-reader
   namespace: cert-manager
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -115,7 +115,7 @@ metadata:
   name: infomaniak-webhook:webhook-authentication-reader
   namespace: kube-system
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -138,7 +138,7 @@ metadata:
   name: infomaniak-webhook:secret-reader
   namespace: cert-manager
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -161,7 +161,7 @@ metadata:
   name: infomaniak-webhook
   namespace: "cert-manager"
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -185,7 +185,7 @@ metadata:
   name: infomaniak-webhook
   namespace: "cert-manager"
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1"
   labels:
     app: infomaniak-webhook
     chart: infomaniak-webhook-0.2.0
@@ -344,3 +344,27 @@ metadata:
 spec:
   ca:
     secretName: infomaniak-webhook-ca
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: infomaniak-webhook
+  namespace: cert-manager
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  egress:
+  # infomaniak api
+  - ports:
+    - port: 443
+      protocol: TCP
+  ingress:
+  # kubeapi
+  - ports:
+    - port: 443
+      protocol: TCP
+  podSelector:
+    matchLabels:
+      app: infomaniak-webhook
+  policyTypes:
+  - Egress
