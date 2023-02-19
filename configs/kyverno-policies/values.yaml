@@ -131,6 +131,15 @@ kyverno-policies:
                     - hubble-ui
         - resources:
             namespaces:
+              - tailscale
+            selector:
+              matchExpressions:
+                - key: app.kubernetes.io/name
+                  operator: in
+                  values:
+                    - tailscale
+        - resources:
+            namespaces:
               - kured
             selector:
               matchExpressions:
