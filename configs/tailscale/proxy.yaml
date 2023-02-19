@@ -77,6 +77,6 @@ spec:
             - name: TS_KUBE_SECRET
               value: tailscale-config
             - name: TS_DEST_IP
-              value: 10.111.0.100 # ClusterIP of private ingress-nginx
+              value: 10.111.0.100 # ClusterIP of contour-private
             - name: TS_EXTRA_ARGS
-              value: --hostname=ingress-nginx-private
+              value: --hostname=contour-private

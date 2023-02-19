@@ -11,19 +11,19 @@ spec:
     - fromEntities:
         - world
   egress:
-    # Allow proxy to talk to tailscale service (currently no idea what type of connections)
     - toEntities:
+    # Allow proxy to talk to tailscale service (currently no idea what type of connections)
         - world
     # Allow connections to the kubeapi
-    - toEntities:
         - "kube-apiserver"
-    # Allow proxy to forward requests to ingress-nginx
+    # Allow proxy to forward requests to contour-private
     - toEndpoints:
         - matchLabels:
-            app.kubernetes.io/name: ingress-nginx
-            io.kubernetes.pod.namespace: ingress-nginx
-      toPorts:
-        - ports:
-            - port: "443"
-        - ports:
-            - port: "80"
+            app.kubernetes.io/name: contour
+            app.kubernetes.io/instance: contour-private
+            io.kubernetes.pod.namespace: contour-private
+      # toPorts:
+      #   - ports:
+      #       - port: "443"
+      #   - ports:
+      #       - port: "80"

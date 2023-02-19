@@ -33,6 +33,8 @@ We have two different contour deployments for private and public services.
 
 We basically copied the setup described here <https://schmatzler.dev/articles/private-kubernetes-ingress-with-tailscale>.
 
+Now when it comes to tailscale,
+
 ### Public
 
 The difference to the private one is only that we don't manage the CRDs and deploy to another namespace with another non-default ingress class called `public`.

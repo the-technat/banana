@@ -29,6 +29,7 @@ contour:
       default: true
 
   envoy:
+    kind: deployment
     priorityClassName: "infra"
     resources:
       limits:

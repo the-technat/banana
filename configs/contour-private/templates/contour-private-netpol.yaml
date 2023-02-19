@@ -30,8 +30,8 @@ spec:
         - matchLabels:
             app.kubernetes.io/name: tailscale
             io.kubernetes.pod.namespace.labels.name: tailscale
-      toPorts:
-        - ports:
-            - port: "443"
-        - ports:
-            - port: "80"
+      # toPorts:
+      #   - ports:
+      #       - port: "443"
+      #   - ports:
+      #       - port: "80"
