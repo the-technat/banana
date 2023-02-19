@@ -33,7 +33,7 @@ argo-cd:
         nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-      ingressClassName: "nginx"
+      ingressClassName: "private"
       hosts:
         - cd.tools.alleaffengaffen.ch
       tls:

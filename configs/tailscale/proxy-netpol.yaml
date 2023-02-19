@@ -10,20 +10,20 @@ spec:
     # Entire telnet should be able to reach the proxy
     - fromEntities:
         - world
+      toPorts:
+        - ports:
+            - port: "443"
+        - ports:
+            - port: "80"
   egress:
     - toEntities:
     # Allow proxy to talk to tailscale service (currently no idea what type of connections)
         - world
     # Allow connections to the kubeapi
-        - "kube-apiserver"
+        - kube-apiserver
     # Allow proxy to forward requests to contour-private
     - toEndpoints:
         - matchLabels:
             app.kubernetes.io/name: contour
             app.kubernetes.io/instance: contour-private
             io.kubernetes.pod.namespace: contour-private
-      # toPorts:
-      #   - ports:
-      #       - port: "443"
-      #   - ports:
-      #       - port: "80"

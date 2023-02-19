@@ -51,3 +51,19 @@ contour:
       externalTrafficPolicy: ''
       clusterIP: 10.111.0.100
       type: ClusterIP
+
+  defaultBackend:
+    enabled: true
+    image:
+      registry: ghcr.io
+      repository: alleaffengaffen/alleaffengaffen
+      tag: main
+    containerPorts:
+      http: 8080
+    resources:
+       limits:
+         cpu: 250m
+         memory: 256Mi
+       requests:
+         cpu: 10m
+         memory: 10Mi

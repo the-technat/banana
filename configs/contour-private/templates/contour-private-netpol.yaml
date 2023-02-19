@@ -19,19 +19,16 @@ spec:
   ingress:
     # Allow webhooks
     - fromEntities:
-        - "kube-apiserver"
-    # proxy to controller
-    - fromEndpoints:
-        - matchLabels:
-            app.kubernetes.io/name: contour
-            app.kubernetes.io/instance: contour-private
-    # Allow tailscale proxy to access contour
-    - fromEndpoints:
-        - matchLabels:
-            app.kubernetes.io/name: tailscale
-            io.kubernetes.pod.namespace.labels.name: tailscale
-      # toPorts:
-      #   - ports:
-      #       - port: "443"
-      #   - ports:
-      #       - port: "80"
+        - kube-apiserver
+        - world
+        - cluster
+    # # proxy to controller
+    # - fromEndpoints:
+    #     - matchLabels:
+    #         app.kubernetes.io/name: contour
+    #         app.kubernetes.io/instance: contour-private
+    # # Allow tailscale proxy to access contour
+    # - fromEndpoints:
+    #     - matchLabels:
+    #         app.kubernetes.io/name: tailscale
+    #         io.kubernetes.pod.namespace.labels.name: tailscale
