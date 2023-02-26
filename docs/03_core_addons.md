@@ -1,10 +1,10 @@
 # 03 - Core Addons
 
-Without any tools, the cluster is not fully functional. Three of the most critical addons we need are [Cilium](https://cilium.io), [Argo CD](https://argoproj.io) and the [HCloud-CCM](https://github.com/hetznercloud/hcloud-cloud-controller-manager). They are installed manually in a first run since they all depend on each other, but later on they will be managed by Argo CD using GitOps.
+Without any tools, the cluster is not fully functional. Three of the most critical addons we need are [Cilium](https://cilium.io), [HCloud-CCM](https://github.com/hetznercloud/hcloud-cloud-controller-manager) and the [External Secrets Operator](https://external-secrets.io/). They are installed manually in a first run since they all depend on each other, but later on they will be managed by Argo CD using GitOps.
 
 Note: Core Addons are also the only addons that are assigned to the `system-cluster-critical` priorityClass and get the sync-wave `-5` in argocd.
 
-Since we later on configure those tools to integrate into systems they manage (e.g Argo CD into Dex and so on), the inital config differs from the actual config from GitOps.
+Since we later on configure those tools to integrate into systems they manage (e.g Hubble UI requires ingress), the inital config differs from the actual config from GitOps.
 
 Please also note, that secrets in this stage of the installation are all created manually if necessary and later-on injected using proper methods.
 
@@ -33,27 +33,11 @@ kubectl apply -f  https://github.com/hetznercloud/hcloud-cloud-controller-manage
 ```
 
 Note that the successful initialization of hcloud-ccm is required for nodes to become ready, since we added the `--cloud-provider=external` flag to the kubelet.
-We also ignore the fact that not all nodes are running on hcloud, since the hcloud-ccm can also configure nodes that run somewhere else.
+We also ignore the fact that not all nodes are running on hcloud, since the hcloud-ccm can also configure nodes that run somewhere else (to be verified).
 
-## GitOps - Argo CD
+## Secrets - External Secrets Operator
 
-Now finally we have Argo CD as our GitOps tool of choice. Since we are missing an ingress-controller we don't yet expose the UI but rely on the controller to interact with our apps we will soon install.
-
-Installed as well using helm:
-
-```bash
-helm repo add argo https://argoproj.github.io/argo-helm
-helm upgrade -i argocd argo/argo-cd -n argocd --create-namespace -f argocd-default-values.yaml
-```
-
-For now you can connect to Argo CD using the following command:
-
-```bash
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-kubectl port-forward svc/argocd-server 8080:80 # open http://localhost:8080
-```
-
-**Change the default admin password!**
+Basically any app needs secrets. According to my homelab they are all stored on akeyless.io, so we need an integration into K8s. While there are differnet ones, we are using the CNCF project [External Secrets Operator](https://external-secrets.io/) to do this in a generic way.
 
 ## Next Steps
 
