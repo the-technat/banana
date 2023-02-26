@@ -1,8 +1,8 @@
 # 04 - Infrastructure Addons
 
-After the core addons have been installed we can start onboarding all apps properly. Argo CD and cilium aren't finally configured with the default. This was just necessary to make sure we can continue with the next step.
+After the core addons have been installed we can start onboarding all apps properly. Argo CD and Cilium aren't finally configured with the default. This was just necessary to make sure we can continue with the next step.
 
-Infrastructure addons are important too, but not crucial for the cluster to work properly, therefore they get the sync-wave `-3` and the priorityClass `infra` that was created by the Argo CD addititonal values.
+Infrastructure addons are important too, but not crucial for the cluster to work properly, therefore they get the sync-wave `-3` and the priorityClass `infra`.
 
 ## Onboarding
 
@@ -12,59 +12,8 @@ To start with the infrastrucutre addons, we deploy the app-of-apps for argocd:
 kubectl apply -f default-app-of-apps.yaml
 ```
 
-## Argo CD
+This will onboard the app-of-apps which inturn will onboard all other apps from Git, including Cilium and Argo CD, so we got a self-managed Argo CD. Of course some things will break now and more than one reconcile-loop is necessary to get things up and running, but this is how K8s works ;).
 
-Argo CD will reconcile itself mostly automatically. Ingress, proper auth, all the core required policies and more.
+## Akeyless Gateway
 
-## Cilium
-
-Will reconcile itself, add host-firewall and policies for the nodes.
-
-## Sealed Secrets Reencryption
-
-This component is used to decrypt all secrets in the cluster, and since it is deployed after argocd, we now need to reencrypt all the secrets we want to deploy and we already deployed.
-
-To do this, you need the original values of your secrets again and need to go through every app.
-
-Here's how you encrypt a secret written in K8s yaml:
-
-```bash
-kubeseal --format yaml <input.yaml >output.yaml
-```
-
-## Kyverno
-
-Nothing to do here, it got applied automatically and is hopefully already reconciled and injected a bunch of policies.
-
-#
-## Cert-Manager
-
-Reencrypt the `infomaniak-api-credentials` secret.
-Note: The Token is not an application password but an API token with the `domain` scope!
-
-## Contour
-
-We have two different contour deployments for private and public services.
-
-### Private
-
-We basically copied the setup described here <https://schmatzler.dev/articles/private-kubernetes-ingress-with-tailscale>.
-
-Now when it comes to tailscale,
-
-### Public
-
-The difference to the private one is only that we don't manage the CRDs and deploy to another namespace with another non-default ingress class called `public`.
-
-## Ingress-nginx
-
-Reencrypt the `tailscale-config` secret so that it can reach tailscale.
-
-Note: The ingress resource will report the ClusterIP of the ingress-nginx service as it's external IP. This will cause external-dns to not work. Solve this either by manually adding the DNS record or adding the following annotation to your ingress:
-
-```yaml
-annotations:
-  external-dns.alpha.kubernetes.io/target: ingress-nginx-proxy.little-cloud.ts.net
-```
-
-Don't forget to authorize and tag the new machine in tailscale once it comes up the first time! Otherwise it won't be able to talk to the other services.
+The most important thing we need to reconcile manually is the Akeyless gateway that provides us with secrets from akeyless.io, a managed vault service.

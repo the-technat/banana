@@ -7,53 +7,45 @@ Why I wrote a documentation about it? Well I'm presumably one of those strange e
 
 Anyway, let's get started with some important topics
 
-## Naming
-
-Naming things is hard so I like names that have no relation to IT at all nor follow a specific scheme.
-
-I name:
-
-- my homelab as a hole `alleaffengaffen`
-- my k8s cluster `banana`
-- my private domain used inside K8s `banana.k8s`
-- my public domain used to expose things `alleaffengaffen.ch`
-- my mail for accounts related to the homelab `banane@alleaffengaffen.ch`
-- anything else must have either a fruit or animal in it's name:
-  - e.g master nodes are `hawk`'s
-  - worker nodes are `minion`'s
-
 ## Basics
 
 For basic principles in my homelab see the [.github](https://github.com/alleaffengaffen/.github) repo.
 
-## Infrastructure
+For the cluster here some architectural decisions:
 
-We're building a single K8s cluster.
+- we are running k8s on the public net
+- we use cilium to secure the traffic between nodes (wireguard, host firewall)
+- we use Ubuntu 22.04 as OS for nodes
+- we keep an emergency serial console access
+- HA is no requirement but shoulnd´t be made impossible by design decisions
+
+## Infrastructure
 
 ### Control Plane
 
-I only run a sigle node as my control-plane with local etcd as it's simpler, easier to restore and uses fewer resources (which are expensive for a homelab that's mainly for fun)
+I only run a sigle node as my control-plane with local etcd as it's simpler, easier to restore and uses fewer resources (which are expensive for a homelab that's mainly for fun). You can extend at any time if you need.
 
 This node is currently running on [Hetzner Cloud](https://www.hetzner.com/de/cloud).
 
-There I have created a project `alleaffengaffen` and added the following resources:
+There I have created a project `banana` and added the following resources:
 
 - SSH-Key which is the default key
-- A server with the following specs:
+- A `hawk` with the following specs:
   - located in Falkenstein
   - type CPX11
+  - Ubuntu 22.04
   - with backups enabled
-  - some tags
-  - public IPv4 but no private net nor ipv6!
+  - some tags: `role=master` and `cluster=banana`
+  - only public IPv4
 
 ### Worker Nodes
 
-Here are the minimal requirements for worker nodes:
+I have as many workers as I need, due to my network typology the only requirements for a worker node are:
 
-- public IPv4
-- no IPv6
-- **no firewall blocking anything**
-- ssh access
+- a public IPv4
+- **no firewall blocking any traffic on this public net**
+- emergency console access
+- (ssh access) convenient but not a requirement
 
 ## Next Step
 

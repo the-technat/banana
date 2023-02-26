@@ -1,4 +1,12 @@
 ---
+apiVersion: scheduling.k8s.io/v1
+description: Used for infra critical pods that must run for the apps to function properly
+kind: PriorityClass
+metadata:
+  name: infra
+preemptionPolicy: PreemptLowerPriority
+value: 1000000000
+---
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
